@@ -8,6 +8,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 public class DemoTest {
 
+    // CI - Cont. Integration
+    // CD - Cont. Delivery
+
 
     @Test
     public void testAddition(){
@@ -17,6 +20,6 @@ public class DemoTest {
 
     @Test
     public void testAddition2(){
-        Assertions.assertEquals(5, 3+3);
+        Assertions.assertEquals(6, 3+3);
     }
 }
