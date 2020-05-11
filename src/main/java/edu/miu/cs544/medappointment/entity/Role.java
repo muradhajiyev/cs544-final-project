@@ -24,7 +24,7 @@ public class Role {
 	@JoinTable(name = "User_Role", 
     joinColumns = { @JoinColumn(name = "UserId") }, 
     inverseJoinColumns = { @JoinColumn(name = "RoleId") })
-	private List<User> user;
+	private List<User> users;
 
 	public Role() {
 		super();
@@ -34,7 +34,7 @@ public class Role {
 	public Role(String name, List<User> user) {
 		super();
 		this.name = name;
-		this.user = user;
+		this.users = user;
 	}
 
 	public String getName() {
@@ -46,13 +46,18 @@ public class Role {
 	}
 
 	public List<User> getUser() {
-		return user;
+		return users;
 	}
 
 	public void setUser(List<User> user) {
-		this.user = user;
+		this.users = user;
 	}
-
+	public boolean addUser(User user) {
+		return users.add(user);
+	}
+	public boolean removeUser(User user) {
+		return users.remove(user);
+	}
 	public Long getId() {
 		return id;
 	}

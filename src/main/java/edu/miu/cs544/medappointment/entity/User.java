@@ -26,7 +26,7 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 	
-	@ManyToMany(mappedBy = "user")
+	@ManyToMany(mappedBy = "users")
 	private List<Role> roles;
 
 	public User() {
@@ -93,7 +93,12 @@ public class User {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-
+	public boolean addRole(Role role) {
+		return roles.add(role);
+	}
+	public boolean removeOrderLine(Role role) {
+		return roles.remove(role);
+	}
 	public Long getId() {
 		return id;
 	}  
