@@ -2,6 +2,7 @@ package edu.miu.cs544.medappointment.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Appointment {
@@ -19,6 +20,9 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name="provider", nullable = false)
     private User provider;
+    
+    @OneToMany(mappedBy = "appointment")
+	private List<Reservation> reservations;
 
     public Appointment(){ }
 
@@ -56,4 +60,21 @@ public class Appointment {
     public void setProvider(User provider) {
         this.provider = provider;
     }
+
+	public List<Reservation> getReservation() {
+		return reservations;
+	}
+
+	public void setReservation(List<Reservation> reservation) {
+		this.reservations = reservation;
+	}
+	
+	public boolean addReservation(Reservation reservation) {
+		return reservations.add(reservation);
+	}
+	
+	public boolean removeOrderLine(Reservation reservation) {
+		return reservations.remove(reservation);
+	}
+	
 }
