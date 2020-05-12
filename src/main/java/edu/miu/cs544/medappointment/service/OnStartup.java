@@ -6,13 +6,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 public class OnStartup 
-{
+{/*
 	
 	@Autowired
 	private StudentManagementService studentManagementService;
 
 	@Autowired
-	private RoleRepository roleRepo;
+	private RoleRepository roleRepo;*/
 
 	@EventListener
 	public void onApplicationEvent(ContextRefreshedEvent event)
