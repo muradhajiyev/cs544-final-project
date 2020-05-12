@@ -41,10 +41,17 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(String firstName, String lastName,
-			@Email(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,3})$") String email,
-			String username, String password, List<Role> roles) {
-		super();
+
+	public User(String firstName, String lastName, String email, String username, String password) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+	}
+
+	public User(String firstName, String lastName, String email,
+				String username, String password, List<Role> roles) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
