@@ -5,13 +5,14 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+@Component
 public class OnStartup 
-{/*
-	
+{
+	/*
 	@Autowired
-	private StudentManagementService studentManagementService;
+	private ManagementService managementService;*/
 
-	@Autowired
+	/*@Autowired
 	private RoleRepository roleRepo;*/
 
 	@EventListener
@@ -25,12 +26,12 @@ public class OnStartup
 	private void createAdminUser()
 	{/*
 
-		StudentForm studentForm = new StudentForm();
-		studentForm.setName("admin");
-		studentForm.setUsername("admin");
-		studentForm.setEmail("admin@gmail.com");
-		studentForm.setPassword("admin123");
-		studentManagementService.addAdminUser(studentForm);*/
+		UserForm uForm = new StudentForm();
+		UserForm.setName("admin");
+		UserForm.setUsername("admin");
+		UserForm.setEmail("admin@test.com");
+		UserForm.setPassword("admin123");
+		managementService.addAdminUser(uForm);*/
 	}
 
 	private void fillRoleTable()
