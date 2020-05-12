@@ -10,7 +10,7 @@ public class AppointmentResponseModel {
     private Long id;
     private LocalDateTime dateTime;
     private String location;
-    private User provider;
+    private UserResponseModel provider;
 
     public AppointmentResponseModel() {
     }
@@ -39,11 +39,11 @@ public class AppointmentResponseModel {
         this.location = location;
     }
 
-    public User getProvider() {
+    public UserResponseModel getProvider() {
         return provider;
     }
 
-    public void setProvider(User provider) {
+    public void setProvider(UserResponseModel provider) {
         this.provider = provider;
     }
 }
