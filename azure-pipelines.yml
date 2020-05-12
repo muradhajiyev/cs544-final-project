@@ -28,6 +28,6 @@ steps:
       
       echo Hello world
       
-      git checkout $(Build.SourceBranchName)
+      git checkout master
       git remote add heroku https://heroku:$(pat)@git.heroku.com/cs544-final-project.git
-      git push heroku $(Build.SourceBranchName)
+      git push heroku master
