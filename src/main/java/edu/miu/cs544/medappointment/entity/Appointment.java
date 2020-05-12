@@ -17,7 +17,7 @@ public class Appointment {
     @Column(nullable = false)
     private String location;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name="provider", nullable = false)
     private User provider;
     

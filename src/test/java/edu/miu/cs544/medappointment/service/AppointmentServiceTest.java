@@ -3,11 +3,14 @@ package edu.miu.cs544.medappointment.service;
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
+import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -27,22 +30,28 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 class AppointmentServiceTest {
 
-    @TestConfiguration
-    static class AppointmentServiceImplTestContextConfiguration{
-        @Bean
-        public AppointmentService appointmentService(){
-            return new AppointmentServiceImpl();
-        }
-    }
+//    @TestConfiguration
+//    static class AppointmentServiceImplTestContextConfiguration{
+//        @Bean
+//        public AppointmentService appointmentService(){
+//            return new AppointmentServiceImpl();
+//        }
+//    }
 
     private User user;
     private Appointment appointment;
 
-    @Autowired
-    private AppointmentService appointmentService;
+//    @Autowired
+    @InjectMocks
+    private AppointmentService appointmentService = new AppointmentServiceImpl();
 
-    @MockBean
+//    @MockBean
+    @Mock
     private AppointmentRepository appointmentRepository;
+
+    // temporary till implement Security
+    @Mock
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -55,6 +64,7 @@ class AppointmentServiceTest {
         appointment.setProvider(user);
 
         //mocking
+        when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
     }
 
