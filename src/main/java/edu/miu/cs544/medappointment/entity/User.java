@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 
 @Entity
@@ -28,6 +29,12 @@ public class User {
 	
 	@ManyToMany(mappedBy = "users")
 	private List<Role> roles;
+	
+	@OneToMany(mappedBy = "provider")
+	private List<Appointment> appointments;
+	
+	@OneToMany(mappedBy = "consumer")
+	private List<Reservation> reservations;
 
 	public User() {
 		super();
@@ -103,4 +110,35 @@ public class User {
 		return id;
 	}
 
+	public List<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(List<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+	
+	public boolean addAppointment(Appointment appointment) {
+		return appointments.add(appointment);
+	}
+	
+	public boolean removeAppointment(Appointment appointment) {
+		return appointments.remove(appointment);
+	}
+	
+	public boolean addReservation(Reservation reservation) {
+		return reservations.add(reservation);
+	}
+	
+	public boolean removeReservations(Reservation reservation) {
+		return reservations.add(reservation);
+	}
 }
