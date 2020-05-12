@@ -20,3 +20,14 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Write your commands here
+      
+      echo Hello world
+      
+      git checkout master
+      git remote add heroku https://heroku:$(pat)@git.heroku.com/cs544-final-project.git
+      git push heroku master

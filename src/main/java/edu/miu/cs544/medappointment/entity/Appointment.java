@@ -17,7 +17,7 @@ public class Appointment {
     @Column(nullable = false)
     private String location;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name="provider", nullable = false)
     private User provider;
     
@@ -35,6 +35,10 @@ public class Appointment {
         this.dateTime = dateTime;
         this.location = location;
         this.provider = provider;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public LocalDateTime getDateTime() {
