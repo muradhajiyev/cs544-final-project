@@ -1,8 +1,5 @@
 package edu.miu.cs544.medappointment.entity;
 
-import com.sun.tools.javac.jvm.Gen;
-import jdk.vm.ci.meta.Local;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -11,18 +8,29 @@ public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private LocalDateTime dateTime;
 
+    @Column(nullable = false)
     private String location;
+
+    @ManyToOne
+    @JoinColumn(name="provider", nullable = false)
+    private User provider;
 
     public Appointment(){ }
 
-    public Appointment(LocalDateTime dateTime, String location){
+    public Appointment(LocalDateTime dateTime, String location) {
         this.dateTime = dateTime;
         this.location = location;
+    }
+
+    public Appointment(LocalDateTime dateTime, String location, User provider){
+        this.dateTime = dateTime;
+        this.location = location;
+        this.provider = provider;
     }
 
     public LocalDateTime getDateTime() {
@@ -41,5 +49,11 @@ public class Appointment {
         this.location = location;
     }
 
+    public User getProvider() {
+        return provider;
+    }
 
+    public void setProvider(User provider) {
+        this.provider = provider;
+    }
 }
