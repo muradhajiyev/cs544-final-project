@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
-
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,12 +30,12 @@ class AppointmentControllerTest {
 
     @Test
     public void createAppointment_ValidInput_ThenReturnAppointmentResponseModel() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
+//        ObjectMapper mapper = new ObjectMapper();
 //        AppointmentRequestModel requestModel = new AppointmentRequestModel(LocalDateTime.now(), "Location");
-        String jsonContent = mapper.writeValueAsString("{\"dateTime\": \"2020-05-23 10:00:00\", \"location\": \"Location\"}");
 //        String jsonContent = mapper.writeValueAsString(requestModel);
+        String jsonContent = "{\"dateTime\": \"2020-05-23T10:00:00\", \"location\": \"Location\"}";
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/v1/appointment")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/appointment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonContent);
 

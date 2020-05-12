@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/appointment")
+@RequestMapping("/api/v1/appointment")
 public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<AppointmentResponseModel> createAppointment(@Valid @RequestBody AppointmentRequestModel model){
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
