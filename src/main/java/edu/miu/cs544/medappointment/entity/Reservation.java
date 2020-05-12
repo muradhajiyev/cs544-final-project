@@ -39,6 +39,23 @@ public class Reservation {
     @JoinColumn(name="appointment_id", nullable = false)
     private Appointment appointment;
 
+	public Reservation() {
+	}
+
+	public Reservation(Date createdAt, Date updatedAt, Status status, User consumer, Appointment appointment) {
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.status = status;
+		this.consumer = consumer;
+		this.appointment = appointment;
+	}
+
+	public Reservation(Date createdAt, Date updatedAt, Status status) {
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.status = status;
+	}
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
