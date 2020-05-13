@@ -80,7 +80,7 @@ public class ReservationControllerTest {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         User consumer = modelMapper.map(consumerRM, User.class);
-        requestModel.setConsumerId(userConsumer.getId());
+        //requestModel.setConsumerId(userConsumer.getId());
 
         String jsonContent = mapper.writeValueAsString(requestModel);
         //String jsonContent = "{\"status\":\"PENDING\", \"appointment\":{\"id\":1, \"dateTime\": \"2020-05-23T10:00:00\", \"location\": \"Verill Hall #35\"}}";
