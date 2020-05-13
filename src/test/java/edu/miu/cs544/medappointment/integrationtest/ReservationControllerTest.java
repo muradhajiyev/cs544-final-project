@@ -85,7 +85,7 @@ public class ReservationControllerTest {
 
     protected Appointment testAppointmentData(){
         //User userChecker = userRepository.getOne(2L);
-        User userChecker = new User("TM Checker", "TM Checker", "checker2@gmail.com", "checker", "123456");
+        User userChecker = new User("TM Checker", "TM Checker", "checker2@gmail.com", "checker2", "123456");
         userChecker = userRepository.save(userChecker);
 
         Appointment appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35", userChecker);
