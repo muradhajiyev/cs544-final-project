@@ -12,10 +12,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -38,4 +35,17 @@ public class ReservationController {
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
+
+    @PutMapping(value = "/cancel/{reservationId}")
+    private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long reservationId, @Valid @RequestBody ReservationRequestModel model) throws Exception {
+        ReservationDto reservation = reservationService.cancelReservation(reservationId);
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
+
+        ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
+
+        return new ResponseEntity(updatedResult, HttpStatus.OK);
+    }
+
 }

@@ -13,7 +13,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -53,11 +52,18 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation cancelReservation(Long id){
-        Optional<Reservation> oldReservation = reservationRepository.findById(id);
-        Reservation reservation = oldReservation.get();
+    public ReservationDto cancelReservation(Long id) throws Exception {
+        Optional<Reservation> currentReservation = reservationRepository.findById(id);
+        if (!currentReservation.isPresent())
+            throw new Exception("The Reservation not found");
+
+        Reservation reservation = currentReservation.get();
         reservation.setStatus(Status.DECLINED);
-        return reservationRepository.save(reservation);
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Reservation updatedReservation = reservationRepository.save(reservation);
+        return mapper.map(updatedReservation, ReservationDto.class);
     }
 
 }

@@ -7,5 +7,5 @@ import edu.miu.cs544.medappointment.shared.ReservationDto;
 
 public interface ReservationService {
     Reservation createReservation(ReservationDto reservation);
-    Reservation cancelReservation(Long id);
+    ReservationDto cancelReservation(Long id) throws Exception;
 }

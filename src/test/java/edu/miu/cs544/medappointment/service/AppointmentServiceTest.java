@@ -22,9 +22,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.function.Supplier;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -79,5 +80,20 @@ class AppointmentServiceTest {
 
         assertEquals(user.getEmail(), created.getProvider().getEmail());
         assertEquals(created.getLocation(), created.getLocation());
+    }
+
+    @Test
+    void testDeleteAppointment() {
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+//        Appointment created = appointmentService.createAppointment(appointmentDto);
+//        appointmentService.deleteAppointment(created.getId());
+//        assertNull(null, (Supplier<String>) appointment.getReservation());
+
+        // Delete All Reservations which is belong to Appointment.
+        // Get All Reservations with appointment id, assert it . assert should equal to NULL assertNull (check it)
+        // Delete Appointment
+        // assert it.
     }
 }

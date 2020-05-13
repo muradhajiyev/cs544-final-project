@@ -48,6 +48,7 @@ class ReservationServiceTest {
         appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35", checker);
 
         reservation = new Reservation();
+        reservation.setId(1L);
         reservation.setStatus(Status.PENDING);
         reservation.setConsumer(student);
         reservation.setAppointment(appointment);
@@ -55,6 +56,7 @@ class ReservationServiceTest {
         //mocking
         when(userRepository.save(any(User.class))).thenReturn(student);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+        when(reservationRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(reservation));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
     }
 
@@ -75,14 +77,8 @@ class ReservationServiceTest {
 
 
     @Test
-    void testCancelReservationByReservationId() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        ReservationDto reservationDto = modelMapper.map(reservation, ReservationDto.class);
-        Reservation created = reservationService.createReservation(reservationDto);
-        System.out.println(reservation.getId());
-        System.out.println(created.getId());
-        Reservation updated = reservationService.cancelReservation(created.getId());
-        assertEquals(reservation.getStatus(), updated.getStatus());
+    void testCancelReservationByReservationId() throws Exception {
+        ReservationDto cancelReservation = reservationService.cancelReservation(1L);
+        assertEquals(Status.DECLINED, cancelReservation.getStatus());
     }
 }

@@ -14,6 +14,7 @@ import java.util.Date;
 
 public class ReservationRequestModel {
 
+    private long id;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,6 +34,14 @@ public class ReservationRequestModel {
     public ReservationRequestModel(Status status, Appointment appointment){
         this.status = status;
         this.appointment = appointment;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Date getCreatedAt() {

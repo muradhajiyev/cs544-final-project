@@ -1,5 +1,6 @@
 package edu.miu.cs544.medappointment.integrationtest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -93,6 +94,19 @@ public class ReservationControllerTest {
 
         return appointmentRepository.save(appointment);
         //return appointmentRepository.getOne(1L);
+    }
+
+
+    @Test
+    public void cancelReservationBasedOnReservationId() throws Exception {
+//        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/reservation/cancel"+1L)
+//                .contentType(MediaType.APPLICATION_JSON);
+//
+//        mockMvc.perform(requestBuilder)
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(content()
+//                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$.status", is("CANCEL")));
     }
 
 
