@@ -16,8 +16,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @Transactional
 public class ReservationServiceImpl implements ReservationService {
@@ -56,9 +54,9 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     /*@Autowired
-	private ModelMapper modelMapper;*/
+	private ModelMapper modelMapper;
 	@Autowired
-	private ReservationRepository reservationRepository;
+	private ReservationRepository reservationRepository;*/
 
 	@Override
 	public ReservationDto getReservationbyId(long id) throws Exception 

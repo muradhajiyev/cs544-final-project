@@ -48,11 +48,11 @@ class ReservationServiceTest {
     
     @Mock
     private ReservationRepository reservationRepository;
-
+/*
     @InjectMocks
     private ReservationService reservationService = new ReservationServiceImpl();
     @Mock
-    private ReservationRepository reservationRepository;
+    private ReservationRepository reservationRepository;*/
     @Mock
     private UserRepository userRepository;
     @Mock
