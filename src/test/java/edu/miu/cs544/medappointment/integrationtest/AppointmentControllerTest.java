@@ -36,9 +36,9 @@ class AppointmentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Mock
+    @Autowired
     private AppointmentRepository appointmentRepository;
-    @Mock
+    @Autowired
     private UserRepository userRepository;
     
     
