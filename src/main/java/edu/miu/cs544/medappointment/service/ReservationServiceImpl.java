@@ -42,6 +42,7 @@ public class ReservationServiceImpl implements ReservationService {
         //reservation.setAppointment(appointment);
 
         Reservation result = reservationRepository.save(reservation);
+
         return result;
     }
 
