@@ -12,11 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
+
+
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
@@ -41,7 +43,7 @@ class AppointmentServiceTest {
     @Mock
     private AppointmentRepository appointmentRepository;
 
-    // temporary till implement Security
+    // TODO. temporary till implement Security
     @Mock
     private UserRepository userRepository;
 
@@ -92,6 +94,8 @@ class AppointmentServiceTest {
         Long count =appointmentService.getAllCount();
         assertEquals(1L, count);
     }
+
+
 
     @Test
     void createAppointment_AppointmentEntity_ThenReturnSavedAppointment() {

@@ -1,6 +1,7 @@
 package edu.miu.cs544.medappointment.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -22,11 +23,11 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "User_Role",
 			joinColumns = { @JoinColumn(name = "UserId") },
 			inverseJoinColumns = { @JoinColumn(name = "RoleId") })
-	private List<Role> roles;
+	private Set<Role> roles;
 
 	@OneToMany(mappedBy = "provider")
 	private List<Appointment> appointments;
@@ -49,7 +50,7 @@ public class User {
 	}
 
 	public User(String firstName, String lastName, String email,
-				String username, String password, List<Role> roles) {
+				String username, String password, Set<Role> roles) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -98,11 +99,11 @@ public class User {
 		this.password = password;
 	}
 
-	public List<Role> getRoles() {
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 

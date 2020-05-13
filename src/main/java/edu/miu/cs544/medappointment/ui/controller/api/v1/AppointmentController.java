@@ -14,6 +14,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,8 +34,9 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @ApiOperation(value="Create a new appointment in the database", response=AppointmentResponseModel.class)
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CHECKER')")
     @PostMapping
+    @ApiOperation(value="Create a new appointment in the database", response=AppointmentResponseModel.class)
     public ResponseEntity<AppointmentResponseModel> createAppointment(@Valid @RequestBody AppointmentRequestModel model){
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -42,6 +49,7 @@ public class AppointmentController {
     }
 
     @GetMapping
+    @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
     public ResponseEntity<Page<AppointmentResponseModel>> getAll(Pageable page){
         Page<AppointmentResponseModel> result=new PageImpl<AppointmentResponseModel>(appointmentService.getAll(page)
                 .getContent().stream()
@@ -52,6 +60,7 @@ public class AppointmentController {
     }
 
     @GetMapping(params = "fetch-all=true")
+    @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
     public ResponseEntity<List<AppointmentResponseModel>> getAll(){
         List<AppointmentResponseModel> result=appointmentService.getAll().stream()
                 .map(appointment -> convertToAppointmentResponseModel(appointment))
@@ -60,19 +69,19 @@ public class AppointmentController {
     }
 
     @GetMapping("/count")
+    @ApiOperation(value="Get All Appoinments", response=Long.class)
     public ResponseEntity<Long> getAllCount() {
         Long result=appointmentService.getAllCount();
         return new ResponseEntity(result,HttpStatus.OK);
     }
 
     private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
-        if(appointment!=null) {
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            AppointmentResponseModel appointmentResponseModel = modelMapper.map(appointment, AppointmentResponseModel.class);
-            return appointmentResponseModel;
-        }else{
+        if(appointment == null)
             return null;
-        }
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentResponseModel appointmentResponseModel = modelMapper.map(appointment, AppointmentResponseModel.class);
+        return appointmentResponseModel;
     }
 }

@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class ReservationServiceTest {
+public class ReservationServiceTest {
 
     private User checker;
     private Appointment appointment;

@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,10 +29,18 @@ class AppointmentControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    public void createAppointment_givenUnauthenticatedUser_thenThrowsException() throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/appointment")
+                .contentType(MediaType.APPLICATION_JSON);
+
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     public void createAppointment_ValidInput_ThenReturnAppointmentResponseModel() throws Exception {
-//        ObjectMapper mapper = new ObjectMapper();
-//        AppointmentRequestModel requestModel = new AppointmentRequestModel(LocalDateTime.now(), "Location");
-//        String jsonContent = mapper.writeValueAsString(requestModel);
         String jsonContent = "{\"dateTime\": \"2020-05-23T10:00:00\", \"location\": \"Location\"}";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/appointments")
@@ -43,6 +55,7 @@ class AppointmentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "123456")
     public void getAllAppointment_Pagable_ThenReturnPageAppointment() throws Exception{
         mockMvc.perform(get("/api/v1/appointments"))
                 .andExpect(status().isOk())
@@ -51,6 +64,7 @@ class AppointmentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "123456")
     public void getAllAppointment_ThenReturnListofAppointment() throws Exception{
         mockMvc.perform(get("/api/v1/appointments?fetch-all=true"))
                 .andExpect(status().isOk())
@@ -59,6 +73,7 @@ class AppointmentControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "123456")
     public void getAllCount_ThenReturnCountNumber() throws Exception {
         mockMvc.perform(get("/api/v1/appointments/count").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -30,6 +30,7 @@ public class ReservationRequestModel {
     public ReservationRequestModel(Status status){
         this.status = status;
     }
+
     public ReservationRequestModel(Status status, Appointment appointment){
         this.status = status;
         this.appointment = appointment;
