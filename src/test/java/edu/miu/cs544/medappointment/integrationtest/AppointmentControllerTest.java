@@ -75,6 +75,7 @@ class AppointmentControllerTest {
     }
     /*
     @Test
+    @WithMockUser(username = "admin", password = "123456")
     public void getAppointmentById_Id_ThenReturnAppointmentResponseModel() throws Exception
     {
     	User user = new User("TM Checker", "TM Checker", "checker@gmail.com", "checker", "123456");
@@ -84,12 +85,12 @@ class AppointmentControllerTest {
         long id = result.getId();
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/v1/appointment/" + id);
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.location", is("Verill Hall #35")));
-    }
-*/
+    }*/
+
 
     @Test
     @WithMockUser(username = "admin", password = "123456")
