@@ -48,7 +48,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Page<AppointmentDto> getAll(Pageable page, Optional<Status> status) {
         //first get list from the page result, then do mapping and return convert the mapped list to page
-        Page<AppointmentDto> entities = appointmentRepository.findAll(page).map(appointment -> convertToAppointmentDto(appointment));
+//        Page<AppointmentDto> entities = appointmentRepository.findAll(page).map(appointment -> convertToAppointmentDto(appointment));
         if(!status.isPresent())
             return appointmentRepository.findAll(page).map(appointment -> convertToAppointmentDto(appointment));
         else
