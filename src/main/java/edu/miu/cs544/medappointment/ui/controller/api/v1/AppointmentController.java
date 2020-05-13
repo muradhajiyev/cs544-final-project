@@ -26,8 +26,8 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @ApiOperation(value="Create a new appointment in the database", response=AppointmentResponseModel.class)
     @PostMapping
+    @ApiOperation(value="Create a new appointment in the database", response=AppointmentResponseModel.class)
     public ResponseEntity<AppointmentResponseModel> createAppointment(@Valid @RequestBody AppointmentRequestModel model){
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
