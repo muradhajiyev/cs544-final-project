@@ -12,6 +12,8 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CHECKER')")
     @PostMapping
     @ApiOperation(value="Create a new appointment in the database", response=AppointmentResponseModel.class)
     public ResponseEntity<AppointmentResponseModel> createAppointment(@Valid @RequestBody AppointmentRequestModel model){

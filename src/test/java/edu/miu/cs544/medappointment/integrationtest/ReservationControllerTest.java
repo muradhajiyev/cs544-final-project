@@ -47,7 +47,7 @@ public class ReservationControllerTest {
     private AppointmentRepository appointmentRepository;
 
     @Test
-    @WithMockUser(username = "admin", password = "123456", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     public void createReservation_ValidInput_ThenReturnReservationResponseModel() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         /*mapper.registerModule(new ParameterNamesModule())

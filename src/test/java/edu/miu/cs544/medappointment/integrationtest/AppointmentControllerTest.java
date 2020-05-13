@@ -43,7 +43,7 @@ class AppointmentControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", password = "123456", roles = {"ADMIN"})
+    @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     public void createAppointment_ValidInput_ThenReturnAppointmentResponseModel() throws Exception {
 //        ObjectMapper mapper = new ObjectMapper();
 //        AppointmentRequestModel requestModel = new AppointmentRequestModel(LocalDateTime.now(), "Location");
