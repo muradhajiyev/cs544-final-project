@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -66,6 +66,7 @@ class AppointmentServiceTest {
         //mocking
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+        when(appointmentRepository.findById(new Long(1))).thenReturn(Optional.of(appointment));
     }
 
     @Test
@@ -79,5 +80,19 @@ class AppointmentServiceTest {
 
         assertEquals(user.getEmail(), created.getProvider().getEmail());
         assertEquals(created.getLocation(), created.getLocation());
+    }
+    
+    @Test
+    void getAppointmentById_Id_ThenReturnAppointment() throws Exception 
+    {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+
+
+        AppointmentDto returned = appointmentService.getAppointmentById(1);
+
+        assertEquals(returned.getProvider().getEmail(), appointment.getProvider().getEmail());
+        assertEquals(returned.getDateTime(), appointment.getDateTime());
     }
 }
