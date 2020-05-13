@@ -73,7 +73,7 @@ class AppointmentServiceTest {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
-
+        System.out.println(appointment.getId());
 
         Appointment created = appointmentService.createAppointment(appointmentDto);
 

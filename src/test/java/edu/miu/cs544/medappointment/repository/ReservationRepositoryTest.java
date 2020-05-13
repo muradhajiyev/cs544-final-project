@@ -1,35 +1,33 @@
 package edu.miu.cs544.medappointment.repository;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
+import edu.miu.cs544.medappointment.entity.Reservation;
+import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-class AppointmentRepositoryTest {
-
+class ReservationRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
+    private ReservationRepository reservationRepository;
 
     @Test
-    public void whenFindAllById_ValidId_thenReturnAppointment(){
+    public void testCancelReservationByReservationId() {
         //given
+
         User user = new User("TM Checker", "TM Checker", "checker@gmail.com", "checker", "123456");
 
         Appointment appointment = new Appointment();
@@ -37,15 +35,25 @@ class AppointmentRepositoryTest {
         appointment.setLocation("McLaughlin");
         appointment.setProvider(user);
 
-        entityManager.persist(user);
-        entityManager.persist(appointment);
+        User user1 = entityManager.persist(user);
+        Appointment appointment1 = entityManager.persist(appointment);
         entityManager.flush();
 
+        Reservation persisted_data = new Reservation();
+        persisted_data.setCreatedAt(new Date());
+        persisted_data.setUpdatedAt(new Date());
+        persisted_data.setStatus(Status.PENDING);
+        persisted_data.setAppointment(appointment);
+        persisted_data.setConsumer(user);
+        entityManager.persist(persisted_data);
+        entityManager.flush();
+        // checking the status is changed to DECLINED
         // when
-        Optional<Appointment> found = appointmentRepository.findById(appointment.getId());
-
+        Reservation updateReservation = reservationRepository.findById(persisted_data.getId()).get();
+        updateReservation.setStatus(Status.DECLINED);
+        reservationRepository.save(updateReservation);
         // then
-        assertEquals(user.getEmail(), found.get().getProvider().getEmail());
-        assertEquals(appointment.getLocation(), found.get().getLocation());
+        assertEquals(Status.DECLINED, updateReservation.getStatus());
     }
+
 }
