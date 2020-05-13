@@ -48,4 +48,5 @@ class AppointmentRepositoryTest {
         assertEquals(user.getEmail(), found.get().getProvider().getEmail());
         assertEquals(appointment.getLocation(), found.get().getLocation());
     }
+
 }

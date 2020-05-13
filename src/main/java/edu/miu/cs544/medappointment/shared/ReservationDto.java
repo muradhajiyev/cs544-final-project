@@ -4,10 +4,6 @@ import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
 
-<<<<<<< HEAD
-import javax.persistence.*;
-=======
->>>>>>> 8573f70673d13988d49dab2c0bf64c3aabfbefe8
 import java.util.Date;
 
 public class ReservationDto {
@@ -21,17 +17,10 @@ public class ReservationDto {
     public ReservationDto() {
     }
 
-<<<<<<< HEAD
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-=======
->>>>>>> 8573f70673d13988d49dab2c0bf64c3aabfbefe8
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -71,11 +60,9 @@ public class ReservationDto {
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
-<<<<<<< HEAD
-=======
+
 
     public Long getId() {
         return id;
     }
->>>>>>> 8573f70673d13988d49dab2c0bf64c3aabfbefe8
 }

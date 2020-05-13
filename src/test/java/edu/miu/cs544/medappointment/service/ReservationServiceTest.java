@@ -24,7 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-
 class ReservationServiceTest {
 
     private User checker;
@@ -72,5 +71,18 @@ class ReservationServiceTest {
         assertEquals(appointment.getLocation(), created.getAppointment().getLocation());
         assertEquals(checker.getEmail(), created.getAppointment().getProvider().getEmail());
         assertEquals(created.getStatus(), created.getStatus());
+    }
+
+
+    @Test
+    void testCancelReservationByReservationId() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ReservationDto reservationDto = modelMapper.map(reservation, ReservationDto.class);
+        Reservation created = reservationService.createReservation(reservationDto);
+        System.out.println(reservation.getId());
+        System.out.println(created.getId());
+        Reservation updated = reservationService.cancelReservation(created.getId());
+        assertEquals(reservation.getStatus(), updated.getStatus());
     }
 }
