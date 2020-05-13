@@ -1,7 +1,10 @@
 package edu.miu.cs544.medappointment.repository;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
+import edu.miu.cs544.medappointment.entity.Reservation;
+import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,26 +33,44 @@ class AppointmentRepositoryTest {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-    @Test
-    public void whenFindAllById_ValidId_thenReturnAppointment(){
+    private List<User> users;
+    private List<Appointment> appointments;
+
+    @BeforeEach
+    public void setUp(){
         //given
-        User user = new User("TM Checker", "TM Checker", "checker@gmail.com", "checker", "123456");
+        users = new ArrayList();
+        users.add(new User("TM Checker", "TM Checker", "checker@gmail.com", "checker", "123456"));
+        users.add(new User("TM Checker2", "TM Checker2", "checker2@gmail.com", "checker2", "1234567"));
+        users.add(new User("TM Checker3", "TM Checker3", "checker3@gmail.com", "checker3", "12345678"));
+        users.add(new User("TM Checker4", "TM Checker4", "checker4@gmail.com", "checker4", "123456789"));
+        appointments=new ArrayList<>();
+        appointments.add(new Appointment(LocalDateTime.now(),"McLaughlin", users.get(0)));
+        appointments.add(new Appointment(LocalDateTime.now(),"Veril hall", users.get(1)));
+        appointments.add(new Appointment(LocalDateTime.now(),"library", users.get(2)));
+        appointments.add(new Appointment(LocalDateTime.now(),"Dalby hall", users.get(3)));
 
-        Appointment appointment = new Appointment();
-        appointment.setDateTime(LocalDateTime.now());
-        appointment.setLocation("McLaughlin");
-        appointment.setProvider(user);
-
-        entityManager.persist(user);
-        entityManager.persist(appointment);
+        for(User user:users){
+            entityManager.persist(user);
+        }
+        for(Appointment appointment:appointments){
+            entityManager.persist(appointment);
+        }
         entityManager.flush();
+    }
 
+
+    @Test
+    public void whenFindAllById_ValidId_thenReturnAppointment() throws Exception{
         // when
-        Optional<Appointment> found = appointmentRepository.findById(appointment.getId());
+        Optional<Appointment> found = appointmentRepository.findById(appointments.get(0).getId());
 
         // then
-        assertEquals(user.getEmail(), found.get().getProvider().getEmail());
-        assertEquals(appointment.getLocation(), found.get().getLocation());
+        assertEquals(appointments.get(0).getLocation(), found.get().getLocation());
+        assertEquals(appointments.get(0).getDateTime(), found.get().getDateTime());
+        assertEquals(appointments.get(0).getProvider(), found.get().getProvider());
+        assertEquals(appointments.get(0).getReservation(), found.get().getReservation());
+
     }
 
     @Test

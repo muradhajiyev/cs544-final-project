@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -47,6 +48,7 @@ public class ReservationControllerTest {
     private AppointmentRepository appointmentRepository;
 
     @Test
+    @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     public void createReservation_ValidInput_ThenReturnReservationResponseModel() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         /*mapper.registerModule(new ParameterNamesModule())
