@@ -9,15 +9,15 @@ import javax.validation.constraints.Email;
 public class User {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
 	private String firstName;
 	private String lastName;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	@Email
 	private String email;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String username;
 	@Column(nullable = false)
 	private String password;
