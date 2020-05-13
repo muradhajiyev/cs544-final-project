@@ -1,37 +1,40 @@
-package edu.miu.cs544.medappointment.shared;
+package edu.miu.cs544.medappointment.ui.model;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
 
-<<<<<<< HEAD
-import javax.persistence.*;
-=======
->>>>>>> 8573f70673d13988d49dab2c0bf64c3aabfbefe8
+import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class ReservationDto {
-    private Long id;
+public class ReservationRequestModel {
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private Status status;
+
     private User consumer;
     private Appointment appointment;
 
-    public ReservationDto() {
+    public ReservationRequestModel() {
+    }
+    public ReservationRequestModel(Status status){
+        this.status = status;
+    }
+    public ReservationRequestModel(Status status, Appointment appointment){
+        this.status = status;
+        this.appointment = appointment;
     }
 
-<<<<<<< HEAD
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-=======
->>>>>>> 8573f70673d13988d49dab2c0bf64c3aabfbefe8
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -71,11 +74,5 @@ public class ReservationDto {
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
-<<<<<<< HEAD
-=======
 
-    public Long getId() {
-        return id;
-    }
->>>>>>> 8573f70673d13988d49dab2c0bf64c3aabfbefe8
 }
