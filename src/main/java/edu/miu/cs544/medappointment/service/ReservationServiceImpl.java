@@ -113,7 +113,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new Exception("The Reservation not found");
 
         Reservation reservation = currentReservation.get();
-        reservation.setStatus(Status.DECLINED);
+        reservation.setStatus(Status.CANCELED);
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 

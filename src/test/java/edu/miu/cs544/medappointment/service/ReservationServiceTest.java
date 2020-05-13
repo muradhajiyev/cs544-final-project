@@ -64,7 +64,6 @@ class ReservationServiceTest {
         when(reservationRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(reservation));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
     }
-/*
     @Test
     void createReservation_ReservationEntity_ThenReturnSavedReservation() throws Exception {
         ModelMapper modelMapper = new ModelMapper();
@@ -93,7 +92,7 @@ class ReservationServiceTest {
     @Test
     void testCancelReservationByReservationId() throws Exception {
         ReservationDto cancelReservation = reservationService.cancelReservation(1L);
-        assertEquals(Status.DECLINED, cancelReservation.getStatus());
+        assertEquals(Status.CANCELED, cancelReservation.getStatus());
     }
     @Test
     void changeReservationStatus_ValidIdStatus_ThenReturnChangedReservation() throws Exception {
@@ -110,6 +109,6 @@ class ReservationServiceTest {
 
         assertEquals(Status.CANCELED, changed.getStatus());
     }
-    */
+    
 
 }
