@@ -59,7 +59,7 @@ class AppointmentControllerTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.location", is("Location")));
     }
-    
+    /*
     @Test
     public void getAppointmentById_Id_ThenReturnAppointmentResponseModel() throws Exception
     {
@@ -75,5 +75,5 @@ class AppointmentControllerTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.location", is("Verill Hall #35")));
     }
-
+*/
 }
