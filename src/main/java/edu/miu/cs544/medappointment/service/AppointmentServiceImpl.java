@@ -53,10 +53,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         return new PageImpl<>(appointmentRepository.findAll(page).getContent().stream().map(appointment -> convertToAppointmentDto(appointment)).collect(Collectors.toList()));
     }
 
-    @Override
+  /*  @Override
     public AppointmentDto getById(Long id) {
         return convertToAppointmentDto(appointmentRepository.findById(id).get());
-    }
+    }*/
 
     @Override
     public Long getAllCount() {
@@ -73,4 +73,5 @@ public class AppointmentServiceImpl implements AppointmentService {
             return null;
         }
     }
+
 }

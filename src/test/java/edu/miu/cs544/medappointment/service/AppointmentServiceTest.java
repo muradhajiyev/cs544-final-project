@@ -62,7 +62,6 @@ class AppointmentServiceTest {
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         when(appointmentRepository.findAll()).thenReturn(appointments);
         when(appointmentRepository.findAll(any(Pageable.class))).thenReturn(appointmentsPage);
-        when(appointmentRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(appointment));
         when(appointmentRepository.count()).thenReturn(1L);
     }
 
@@ -74,8 +73,6 @@ class AppointmentServiceTest {
         assertEquals(appointments.get(0).getLocation(), appointmentListResult.get(0).getLocation());
         assertEquals(appointments.get(0).getDateTime(), appointmentListResult.get(0).getDateTime());
         assertEquals(appointments.get(0).getProvider(), appointmentListResult.get(0).getProvider());
-        assertEquals(appointments.get(0).getReservation(), appointmentListResult.get(0).getReservations());
-
     }
 
     @Test
@@ -86,7 +83,6 @@ class AppointmentServiceTest {
         assertEquals(appointmentsPage.getContent().get(0).getLocation(), appointmentListResult.getContent().get(0).getLocation());
         assertEquals(appointmentsPage.getContent().get(0).getDateTime(), appointmentListResult.getContent().get(0).getDateTime());
         assertEquals(appointmentsPage.getContent().get(0).getProvider(), appointmentListResult.getContent().get(0).getProvider());
-        assertEquals(appointmentsPage.getContent().get(0).getReservation(), appointmentListResult.getContent().get(0).getReservations());
     }
 
     @Test
@@ -97,16 +93,6 @@ class AppointmentServiceTest {
         assertEquals(1L, count);
     }
 
-    @Test
-    void getAppointment_ValidId_ThenReturnAppointment() {
-
-        AppointmentDto appointmentResult=appointmentService.getById(1L);
-        assertEquals(appointment.getLocation(), appointmentResult.getLocation());
-        assertEquals(appointment.getDateTime(), appointmentResult.getDateTime());
-        assertEquals(appointment.getProvider(), appointmentResult.getProvider());
-        assertEquals(appointment.getReservation(), appointmentResult.getReservations());
-
-    }
     @Test
     void createAppointment_AppointmentEntity_ThenReturnSavedAppointment() {
         ModelMapper modelMapper = new ModelMapper();

@@ -11,6 +11,6 @@ public interface AppointmentService {
     Appointment createAppointment(AppointmentDto appointment);
     List<AppointmentDto> getAll();
     Page<AppointmentDto> getAll(Pageable page);
-    AppointmentDto getById(Long id);
+    //AppointmentDto getById(Long id);
     Long getAllCount();
 }

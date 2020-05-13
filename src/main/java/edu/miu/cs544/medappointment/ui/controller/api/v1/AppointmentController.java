@@ -1,6 +1,5 @@
 package edu.miu.cs544.medappointment.ui.controller.api.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.service.AppointmentService;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
@@ -19,12 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/appointment")
+@RequestMapping("/api/v1/appointments")
 public class AppointmentController {
 
     @Autowired
@@ -47,7 +45,7 @@ public class AppointmentController {
     public ResponseEntity<Page<AppointmentResponseModel>> getAll(Pageable page){
         Page<AppointmentResponseModel> result=new PageImpl<AppointmentResponseModel>(appointmentService.getAll(page)
                 .getContent().stream()
-                .map(appointmentDto -> convertToAppointmentDto(appointmentDto))
+                .map(appointment -> convertToAppointmentResponseModel(appointment))
                 .collect(Collectors.toList())
         );
         return new ResponseEntity(result,HttpStatus.OK);
@@ -56,21 +54,20 @@ public class AppointmentController {
     @GetMapping(params = "fetch-all=true")
     public ResponseEntity<List<AppointmentResponseModel>> getAll(){
         List<AppointmentResponseModel> result=appointmentService.getAll().stream()
-                .map(appointmentDto -> convertToAppointmentDto(appointmentDto))
+                .map(appointment -> convertToAppointmentResponseModel(appointment))
                 .collect(Collectors.toList());
         return new ResponseEntity(result,HttpStatus.OK);
     }
+
     @GetMapping("/count")
     public ResponseEntity<Long> getAllCount() {
         Long result=appointmentService.getAllCount();
         return new ResponseEntity(result,HttpStatus.OK);
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<AppointmentResponseModel> getById(@PathVariable Long id) {
-        AppointmentResponseModel result=convertToAppointmentDto(appointmentService.getById(id));
-        return new ResponseEntity<>(result,HttpStatus.OK);
-    }
-    private AppointmentResponseModel convertToAppointmentDto(AppointmentDto appointment) {
+
+
+
+    private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
         if(appointment!=null) {
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
