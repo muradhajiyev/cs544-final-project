@@ -1,4 +1,4 @@
-package edu.miu.cs544.medappointment.ui.controller;
+/*package edu.miu.cs544.medappointment.ui.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,4 +62,4 @@ public class ReservationController {
 									.collect(Collectors.toList());
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
-}
+}*/
