@@ -1,6 +1,7 @@
 package edu.miu.cs544.medappointment.entity;
 
-import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class Reservation {
@@ -21,11 +20,11 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
+	@CreationTimestamp
     private Date createdAt;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
+	@UpdateTimestamp
     private Date updatedAt;
     
     @Column(nullable = false)
@@ -108,5 +107,7 @@ public class Reservation {
 	public Long getId() {
 		return id;
 	}
+
+	public void setId(Long id){ this.id = id; }
     
 }

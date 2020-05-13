@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +64,8 @@ class AppointmentServiceTest {
         //mocking
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+        when(appointmentRepository.findAll()).thenReturn(appointments);
         when(appointmentRepository.findAll(any(Pageable.class))).thenReturn(appointmentsPage);
         when(appointmentRepository.count()).thenReturn(1L);
     }
@@ -85,5 +88,19 @@ class AppointmentServiceTest {
         Appointment created = appointmentService.createAppointment(appointmentDto);
         assertEquals(user.getEmail(), created.getProvider().getEmail());
         assertEquals(created.getLocation(), created.getLocation());
+    }
+    
+    @Test
+    void getAppointmentById_Id_ThenReturnAppointment() throws Exception 
+    {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+
+
+        AppointmentDto returned = appointmentService.getById(1L);
+
+        assertEquals(returned.getProvider().getEmail(), appointment.getProvider().getEmail());
+        assertEquals(returned.getDateTime(), appointment.getDateTime());
     }
 }

@@ -6,6 +6,7 @@ import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +55,10 @@ public class AppointmentServiceImpl implements AppointmentService {
             return appointmentRepository.findDistinctByReservationsStatus(status.get(),page).map(appointment -> convertToAppointmentDto(appointment));
     }
 
-  /*  @Override
+    @Override
     public AppointmentDto getById(Long id) {
         return convertToAppointmentDto(appointmentRepository.findById(id).get());
-    }*/
+    }
 
 
     private AppointmentDto convertToAppointmentDto(Appointment appointment) {

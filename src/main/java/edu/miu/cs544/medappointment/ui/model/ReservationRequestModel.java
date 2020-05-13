@@ -14,42 +14,21 @@ import java.util.Date;
 
 public class ReservationRequestModel {
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
     @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private User consumer;
-    private Appointment appointment;
+    private Long consumerId;
+    private Long appointmentId;
 
     public ReservationRequestModel() {
     }
     public ReservationRequestModel(Status status){
         this.status = status;
     }
-
-    public ReservationRequestModel(Status status, Appointment appointment){
+    public ReservationRequestModel(Status status, Long appointmentId){
         this.status = status;
-        this.appointment = appointment;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+        this.appointmentId = appointmentId;
     }
 
     public Status getStatus() {
@@ -60,20 +39,20 @@ public class ReservationRequestModel {
         this.status = status;
     }
 
-    public User getConsumer() {
-        return consumer;
+    public Long getConsumerId() {
+        return consumerId;
     }
 
-    public void setConsumer(User consumer) {
-        this.consumer = consumer;
+    public void setConsumerId(Long consumerId) {
+        this.consumerId = consumerId;
     }
 
-    public Appointment getAppointment() {
-        return appointment;
+    public Long getAppointmentId() {
+        return appointmentId;
     }
 
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
+    public void setAppointmentId(Long appointmentId) {
+        this.appointmentId = appointmentId;
     }
 
 }

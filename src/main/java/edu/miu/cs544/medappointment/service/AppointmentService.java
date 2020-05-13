@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface AppointmentService {
     Appointment createAppointment(AppointmentDto appointment);
     Page<AppointmentDto> getAll(Pageable page, Optional<Status> status);
-    //AppointmentDto getById(Long id);
-
+    AppointmentDto getById(Long id);
 }
