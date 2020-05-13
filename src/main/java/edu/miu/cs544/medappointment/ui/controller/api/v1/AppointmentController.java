@@ -1,6 +1,5 @@
 package edu.miu.cs544.medappointment.ui.controller.api.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.service.AppointmentService;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
@@ -10,17 +9,20 @@ import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/appointment")
+@RequestMapping("/api/v1/appointments")
 public class AppointmentController {
 
     @Autowired
@@ -39,4 +41,40 @@ public class AppointmentController {
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity<Page<AppointmentResponseModel>> getAll(Pageable page){
+        Page<AppointmentResponseModel> result=new PageImpl<AppointmentResponseModel>(appointmentService.getAll(page)
+                .getContent().stream()
+                .map(appointment -> convertToAppointmentResponseModel(appointment))
+                .collect(Collectors.toList())
+        );
+        return new ResponseEntity(result,HttpStatus.OK);
+    }
+
+    @GetMapping(params = "fetch-all=true")
+    public ResponseEntity<List<AppointmentResponseModel>> getAll(){
+        List<AppointmentResponseModel> result=appointmentService.getAll().stream()
+                .map(appointment -> convertToAppointmentResponseModel(appointment))
+                .collect(Collectors.toList());
+        return new ResponseEntity(result,HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getAllCount() {
+        Long result=appointmentService.getAllCount();
+        return new ResponseEntity(result,HttpStatus.OK);
+    }
+
+
+
+    private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
+        if(appointment!=null) {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            AppointmentResponseModel appointmentResponseModel = modelMapper.map(appointment, AppointmentResponseModel.class);
+            return appointmentResponseModel;
+        }else{
+            return null;
+        }
+    }
 }
