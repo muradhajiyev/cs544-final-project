@@ -24,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,40 +63,19 @@ class AppointmentServiceTest {
         //mocking
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
-        when(appointmentRepository.findAll()).thenReturn(appointments);
         when(appointmentRepository.findAll(any(Pageable.class))).thenReturn(appointmentsPage);
         when(appointmentRepository.count()).thenReturn(1L);
-    }
-
-    @Test
-    void getAllAppointment_ThenReturnListofAppointment() {
-
-        List<AppointmentDto> appointmentListResult=appointmentService.getAll();
-
-        assertEquals(appointments.get(0).getLocation(), appointmentListResult.get(0).getLocation());
-        assertEquals(appointments.get(0).getDateTime(), appointmentListResult.get(0).getDateTime());
-        assertEquals(appointments.get(0).getProvider(), appointmentListResult.get(0).getProvider());
     }
 
     @Test
     void getAllAppointment_Pagable_ThenReturnPageAppointment() {
 
         Pageable page=PageRequest.of(0,20);
-        Page<AppointmentDto> appointmentListResult=appointmentService.getAll(page);
+        Page<AppointmentDto> appointmentListResult=appointmentService.getAll(page, Optional.empty());
         assertEquals(appointmentsPage.getContent().get(0).getLocation(), appointmentListResult.getContent().get(0).getLocation());
         assertEquals(appointmentsPage.getContent().get(0).getDateTime(), appointmentListResult.getContent().get(0).getDateTime());
         assertEquals(appointmentsPage.getContent().get(0).getProvider(), appointmentListResult.getContent().get(0).getProvider());
     }
-
-    @Test
-    void getAllCount_ThenReturnCountNumber() {
-
-        Pageable page=PageRequest.of(0,20);
-        Long count =appointmentService.getAllCount();
-        assertEquals(1L, count);
-    }
-
-
 
     @Test
     void createAppointment_AppointmentEntity_ThenReturnSavedAppointment() {

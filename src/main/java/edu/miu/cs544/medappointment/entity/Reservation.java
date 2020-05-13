@@ -1,5 +1,6 @@
 package edu.miu.cs544.medappointment.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -54,6 +55,14 @@ public class Reservation {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.status = status;
+	}
+
+	public Reservation(Status status, User consumer, Appointment appointment) {
+		createdAt= new Date();
+		updatedAt=new Date();
+		this.status = status;
+		this.consumer = consumer;
+		this.appointment = appointment;
 	}
 
 	public Date getCreatedAt() {
