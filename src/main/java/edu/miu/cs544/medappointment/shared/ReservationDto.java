@@ -1,10 +1,10 @@
 package edu.miu.cs544.medappointment.shared;
 
-import java.util.Date;
+import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
-import edu.miu.cs544.medappointment.entity.Appointment;
 
+import java.util.Date;
 
 public class ReservationDto {
     private Long id;
@@ -12,7 +12,7 @@ public class ReservationDto {
     private Date updatedAt;
     private Status status;
     private User consumer;
-    private Appointment appointment;
+    private AppointmentDto appointmentDto;
 
     public ReservationDto() {
     }
@@ -53,12 +53,12 @@ public class ReservationDto {
         this.consumer = consumer;
     }
 
-    public Appointment getAppointment() {
-        return appointment;
+    public AppointmentDto getAppointmentDto() {
+        return appointmentDto;
     }
 
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
+    public void setAppointmentDto(AppointmentDto appointmentDto) {
+        this.appointmentDto = appointmentDto;
     }
 
 

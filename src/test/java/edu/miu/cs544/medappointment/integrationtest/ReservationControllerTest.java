@@ -11,7 +11,10 @@ import edu.miu.cs544.medappointment.entity.Reservation;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
+import edu.miu.cs544.medappointment.repository.ReservationRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
+import edu.miu.cs544.medappointment.service.ReservationService;
+import edu.miu.cs544.medappointment.shared.ReservationDto;
 import edu.miu.cs544.medappointment.ui.model.ReservationRequestModel;
 import edu.miu.cs544.medappointment.ui.model.UserResponseModel;
 import org.junit.jupiter.api.Test;
@@ -46,6 +49,10 @@ public class ReservationControllerTest {
     private UserRepository userRepository;
     @Autowired
     private AppointmentRepository appointmentRepository;
+    @Autowired
+    private ReservationService reservationService;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @Test
     @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
@@ -58,21 +65,19 @@ public class ReservationControllerTest {
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.registerModule(new JavaTimeModule());
         Appointment appointment = testAppointmentData();
-        ReservationRequestModel requestModel = new ReservationRequestModel(Status.PENDING, appointment);
-
+        ReservationRequestModel requestModel = new ReservationRequestModel(Status.PENDING, appointment.getId());
         UserResponseModel consumerRM = new UserResponseModel();
         consumerRM.setId(3L);
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         User consumer = modelMapper.map(consumerRM, User.class);
-        //System.out.println(userRepository.getOne(3L));
-        requestModel.setConsumer( consumer);
+        requestModel.setConsumerId(3L);
 
         String jsonContent = mapper.writeValueAsString(requestModel);
         //String jsonContent = "{\"status\":\"PENDING\", \"appointment\":{\"id\":1, \"dateTime\": \"2020-05-23T10:00:00\", \"location\": \"Verill Hall #35\"}}";
-        //System.out.println(jsonContent);
+        System.out.println(jsonContent);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/reservation")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/v1/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonContent);
 
@@ -80,10 +85,11 @@ public class ReservationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status", is("PENDING")))
-                .andExpect(jsonPath("$.appointment.location", is("Verill Hall #35")))
-                .andExpect(jsonPath("$.appointment.provider.email", is("checker2@gmail.com")))
-                .andExpect(jsonPath("$.consumer.email", is("anna@gmail.com")));
+                .andExpect(jsonPath("$.status", is("PENDING")));
+        //.andExpect(jsonPath("$.id", is(appointment.getId())));
+        //.andExpect(jsonPath("$.appointment.location", is("Verill Hall #35")))
+        //.andExpect(jsonPath("$.appointment.provider.email", is("checker2@gmail.com")))
+        //.andExpect(jsonPath("$.consumer.email", is("anna@gmail.com")));
     }
 
     protected Appointment testAppointmentData(){
@@ -96,6 +102,27 @@ public class ReservationControllerTest {
 
         return appointmentRepository.save(appointment);
         //return appointmentRepository.getOne(1L);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
+    public void changeReservationStatus_ValidInput_ThenReturnReservationResponseModel() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        ReservationRequestModel requestModel = new ReservationRequestModel();
+        requestModel.setStatus(Status.CANCELED);
+        requestModel.setAppointmentId(1L);
+        String jsonContent = mapper.writeValueAsString(requestModel);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/api/v1/reservations/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonContent);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status", is("CANCELED")))
+        ;
     }
 
 

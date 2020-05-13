@@ -1,5 +1,9 @@
 package edu.miu.cs544.medappointment.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,11 +24,11 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
+	@CreationTimestamp
     private Date createdAt;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
+	@UpdateTimestamp
     private Date updatedAt;
     
     @Column(nullable = false)
