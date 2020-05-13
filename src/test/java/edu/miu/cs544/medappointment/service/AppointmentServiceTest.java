@@ -5,54 +5,34 @@ import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 class AppointmentServiceTest {
 
-//    @TestConfiguration
-//    static class AppointmentServiceImplTestContextConfiguration{
-//        @Bean
-//        public AppointmentService appointmentService(){
-//            return new AppointmentServiceImpl();
-//        }
-//    }
-
     private User user;
     private Appointment appointment;
 
-//    @Autowired
     @InjectMocks
     private AppointmentService appointmentService = new AppointmentServiceImpl();
 
-//    @MockBean
     @Mock
     private AppointmentRepository appointmentRepository;
 
-    // temporary till implement Security
+    // TODO. temporary till implement Security
     @Mock
     private UserRepository userRepository;
 
