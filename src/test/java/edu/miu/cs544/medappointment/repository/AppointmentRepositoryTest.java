@@ -38,6 +38,7 @@ class AppointmentRepositoryTest {
         appointment.setLocation("McLaughlin");
         appointment.setProvider(user);
 
+        entityManager.persist(user);
         entityManager.persist(appointment);
         entityManager.flush();
 

@@ -2,37 +2,35 @@ package edu.miu.cs544.medappointment.entity;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 
 @Entity
 public class User {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
 	private String firstName;
 	private String lastName;
-	@Column(nullable = false)
-	@Email(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,3})$")
+	@Column(nullable = false, unique = true)
+	@Email
 	private String email;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String username;
 	@Column(nullable = false)
 	private String password;
-	
-	@ManyToMany(mappedBy = "users")
+
+	@ManyToMany
+	@JoinTable(name = "User_Role",
+			joinColumns = { @JoinColumn(name = "UserId") },
+			inverseJoinColumns = { @JoinColumn(name = "RoleId") })
 	private List<Role> roles;
-	
+
 	@OneToMany(mappedBy = "provider")
 	private List<Appointment> appointments;
-	
+
 	@OneToMany(mappedBy = "consumer")
 	private List<Reservation> reservations;
 
@@ -107,12 +105,15 @@ public class User {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
+
 	public boolean addRole(Role role) {
 		return roles.add(role);
 	}
+
 	public boolean removeOrderLine(Role role) {
 		return roles.remove(role);
 	}
+
 	public Long getId() {
 		return id;
 	}
@@ -132,19 +133,19 @@ public class User {
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
-	
+
 	public boolean addAppointment(Appointment appointment) {
 		return appointments.add(appointment);
 	}
-	
+
 	public boolean removeAppointment(Appointment appointment) {
 		return appointments.remove(appointment);
 	}
-	
+
 	public boolean addReservation(Reservation reservation) {
 		return reservations.add(reservation);
 	}
-	
+
 	public boolean removeReservations(Reservation reservation) {
 		return reservations.add(reservation);
 	}

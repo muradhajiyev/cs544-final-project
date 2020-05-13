@@ -3,6 +3,7 @@ package edu.miu.cs544.medappointment.service;
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
+import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,10 @@ class AppointmentServiceTest {
     @Mock
     private AppointmentRepository appointmentRepository;
 
+    // temporary till implement Security
+    @Mock
+    private UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
         //given
@@ -59,7 +64,7 @@ class AppointmentServiceTest {
         appointment.setProvider(user);
 
         //mocking
-        // temporary  -  when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
     }
 

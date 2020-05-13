@@ -1,4 +1,4 @@
-package edu.miu.cs544.medappointment.ui.controller;
+package edu.miu.cs544.medappointment.ui.controller.api.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.cs544.medappointment.entity.Appointment;
@@ -6,6 +6,7 @@ import edu.miu.cs544.medappointment.service.AppointmentService;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
 import edu.miu.cs544.medappointment.ui.model.AppointmentRequestModel;
 import edu.miu.cs544.medappointment.ui.model.AppointmentResponseModel;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/appointment")
+@RequestMapping("/api/v1/appointment")
 public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
 
-    @PostMapping()
+    @ApiOperation(value="Create a new appointment in the database", response=AppointmentResponseModel.class)
+    @PostMapping
     public ResponseEntity<AppointmentResponseModel> createAppointment(@Valid @RequestBody AppointmentRequestModel model){
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
