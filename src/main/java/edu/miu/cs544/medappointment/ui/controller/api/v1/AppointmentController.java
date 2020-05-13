@@ -51,6 +51,7 @@ public class AppointmentController {
     }
     
     @GetMapping("/{id}")
+    @ApiOperation(value="Get an appointment by id", response=AppointmentResponseModel.class)
 	public ResponseEntity<AppointmentResponseModel> getAppointmentById(@PathVariable long id)
     {
 		ModelMapper mapper = new ModelMapper();
