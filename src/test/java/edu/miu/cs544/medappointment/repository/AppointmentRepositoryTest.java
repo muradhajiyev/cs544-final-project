@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +39,7 @@ class AppointmentRepositoryTest {
 
     private List<User> users;
     private List<Appointment> appointments;
+    private Reservation reservation;
 
     @BeforeEach
     public void setUp(){
@@ -49,13 +54,14 @@ class AppointmentRepositoryTest {
         appointments.add(new Appointment(LocalDateTime.now(),"Veril hall", users.get(1)));
         appointments.add(new Appointment(LocalDateTime.now(),"library", users.get(2)));
         appointments.add(new Appointment(LocalDateTime.now(),"Dalby hall", users.get(3)));
-
+        reservation=new Reservation(Status.PENDING,users.get(0),appointments.get(0));
         for(User user:users){
             entityManager.persist(user);
         }
         for(Appointment appointment:appointments){
             entityManager.persist(appointment);
         }
+        entityManager.persist(reservation);
         entityManager.flush();
     }
 
@@ -71,5 +77,13 @@ class AppointmentRepositoryTest {
         assertEquals(appointments.get(0).getProvider(), found.get().getProvider());
         assertEquals(appointments.get(0).getReservation(), found.get().getReservation());
 
+    }
+
+    @Test
+    public void findAppointmentReservationsStatus_Status_theReturnAppointmentList() throws Exception{
+        // when
+        Pageable page = PageRequest.of(0,20);
+        Page<Appointment> found = appointmentRepository.findDistinctByReservationsStatus(Status.PENDING, page);
+        assertEquals(appointments.get(0).getLocation(),found.getContent().get(0).getLocation());
     }
 }

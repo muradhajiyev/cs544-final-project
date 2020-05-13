@@ -2,8 +2,6 @@ package edu.miu.cs544.medappointment.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class Reservation {
@@ -58,6 +54,14 @@ public class Reservation {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.status = status;
+	}
+
+	public Reservation(Status status, User consumer, Appointment appointment) {
+		createdAt= new Date();
+		updatedAt=new Date();
+		this.status = status;
+		this.consumer = consumer;
+		this.appointment = appointment;
 	}
 
 	public Date getCreatedAt() {

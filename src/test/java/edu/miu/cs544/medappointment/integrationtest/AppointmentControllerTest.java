@@ -101,22 +101,5 @@ class AppointmentControllerTest {
                     .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
-    @Test
-    @WithMockUser(username = "admin", password = "123456")
-    public void getAllAppointment_ThenReturnListofAppointment() throws Exception{
-        mockMvc.perform(get("/api/v1/appointments?fetch-all=true"))
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    @WithMockUser(username = "admin", password = "123456")
-    public void getAllCount_ThenReturnCountNumber() throws Exception {
-        mockMvc.perform(get("/api/v1/appointments/count").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-    }
 
 }

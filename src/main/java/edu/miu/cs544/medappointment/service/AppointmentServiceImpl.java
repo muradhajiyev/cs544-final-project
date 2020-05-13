@@ -1,6 +1,7 @@
 package edu.miu.cs544.medappointment.service;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
+import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,14 +46,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDto> getAll() {
-        return appointmentRepository.findAll().stream().map(appointment -> convertToAppointmentDto(appointment)).collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<AppointmentDto> getAll(Pageable page) {
+    public Page<AppointmentDto> getAll(Pageable page, Optional<Status> status) {
         //first get list from the page result, then do mapping and return convert the mapped list to page
-        return new PageImpl<>(appointmentRepository.findAll(page).getContent().stream().map(appointment -> convertToAppointmentDto(appointment)).collect(Collectors.toList()));
+//        Page<AppointmentDto> entities = appointmentRepository.findAll(page).map(appointment -> convertToAppointmentDto(appointment));
+        if(!status.isPresent())
+            return appointmentRepository.findAll(page).map(appointment -> convertToAppointmentDto(appointment));
+        else
+            return appointmentRepository.findDistinctByReservationsStatus(status.get(),page).map(appointment -> convertToAppointmentDto(appointment));
     }
 
     @Override
@@ -59,10 +60,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         return convertToAppointmentDto(appointmentRepository.findById(id).get());
     }
 
-    @Override
-    public Long getAllCount() {
-        return appointmentRepository.count();
-    }
 
     private AppointmentDto convertToAppointmentDto(Appointment appointment) {
         if(appointment!=null) {
