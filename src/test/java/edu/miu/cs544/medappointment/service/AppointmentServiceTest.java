@@ -19,12 +19,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -67,6 +70,8 @@ class AppointmentServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
     }
+
+
 
     @Test
     void createAppointment_AppointmentEntity_ThenReturnSavedAppointment() {
