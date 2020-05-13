@@ -65,8 +65,6 @@ public class AppointmentController {
         return new ResponseEntity(result,HttpStatus.OK);
     }
 
-
-
     private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
         if(appointment!=null) {
             ModelMapper modelMapper = new ModelMapper();

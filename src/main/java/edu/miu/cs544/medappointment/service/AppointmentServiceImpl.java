@@ -60,6 +60,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Long getAllCount() {
+
         return appointmentRepository.count();
     }
 
