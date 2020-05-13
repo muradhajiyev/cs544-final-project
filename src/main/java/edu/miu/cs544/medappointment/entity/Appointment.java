@@ -1,5 +1,7 @@
 package edu.miu.cs544.medappointment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
