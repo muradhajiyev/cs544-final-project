@@ -1,11 +1,7 @@
 package edu.miu.cs544.medappointment.integrationtest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.miu.cs544.medappointment.ui.model.AppointmentRequestModel;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +12,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -45,5 +41,37 @@ class AppointmentControllerTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.location", is("Location")));
     }
+
+    @Test
+    public void getAllAppointment_Pagable_ThenReturnPageAppointment() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/appointment"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content()
+                    .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void getAllAppointment_ThenReturnListofAppointment() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/appointment?fetch-all=true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+//    @Test
+//    public void getAppointment_ValidId_ThenReturnAppointment() throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.get("api/v1/appointment/1"))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(content()
+//                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+//    }
+//
+//    @Test
+//    public void getAllCount_ThenReturnCountNumber() throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.get("api/v1/appointment/count"))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(content()
+//                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+//    }
 
 }
