@@ -1,10 +1,10 @@
 package edu.miu.cs544.medappointment.shared;
 
-import edu.miu.cs544.medappointment.entity.Appointment;
+import java.util.Date;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
+import edu.miu.cs544.medappointment.entity.Appointment;
 
-import java.util.Date;
 
 public class ReservationDto {
     private Long id;

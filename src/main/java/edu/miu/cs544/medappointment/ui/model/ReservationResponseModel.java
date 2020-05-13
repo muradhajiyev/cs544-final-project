@@ -1,12 +1,10 @@
 package edu.miu.cs544.medappointment.ui.model;
 
+import java.util.Date;
 
-
-import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
-
-import java.util.Date;
+import edu.miu.cs544.medappointment.shared.AppointmentDto;
 
 public class ReservationResponseModel {
 
