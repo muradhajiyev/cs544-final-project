@@ -19,14 +19,15 @@ import edu.miu.cs544.medappointment.shared.ReservationDto;
 public class ReservationServiceImpl implements ReservationService 
 {
 
-	@Autowired
-	private ModelMapper modelMapper;
+	/*@Autowired
+	private ModelMapper modelMapper;*/
 	@Autowired
 	private ReservationRepository reservationRepository;
 
 	@Override
 	public ReservationDto getReservationbyId(long id) throws Exception 
 	{
+		ModelMapper modelMapper = new ModelMapper(); 
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		Reservation reservation = reservationRepository.findById(id).orElseThrow(Exception::new);
 		return modelMapper.map(reservation, ReservationDto.class);
@@ -35,6 +36,8 @@ public class ReservationServiceImpl implements ReservationService
 	@Override
 	public List<ReservationDto> getAllReservations() 
 	{
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		List<Reservation> reservations = reservationRepository.findAll();
 		if (reservations != null)
 			return reservations.stream().map(entity -> modelMapper.map(entity, ReservationDto.class))
