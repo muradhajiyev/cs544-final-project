@@ -1,14 +1,13 @@
 package edu.miu.cs544.medappointment;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.runner.RunWith;
 
-@SpringBootTest
+@RunWith(JUnitPlatform.class)
+@SelectPackages("edu.miu.cs544.medappointment")
 class MedAppointmentApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
 
 }
 

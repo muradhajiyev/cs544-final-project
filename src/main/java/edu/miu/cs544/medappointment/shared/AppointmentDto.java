@@ -11,7 +11,7 @@ public class AppointmentDto {
     private LocalDateTime dateTime;
     private String location;
     private User provider;
-    private List<Reservation> reservations;
+    private List<ReservationDto> reservations;
 
 
     public AppointmentDto() {
@@ -49,11 +49,11 @@ public class AppointmentDto {
         this.provider = provider;
     }
 
-    public List<Reservation> getReservations() {
+    public List<ReservationDto> getReservations() {
         return reservations;
     }
 
-    public void setReservations(List<Reservation> reservations) {
+    public void setReservations(List<ReservationDto> reservations) {
         this.reservations = reservations;
     }
 }

@@ -79,7 +79,7 @@ public class Appointment {
 		return reservations.add(reservation);
 	}
 	
-	public boolean removeOrderLine(Reservation reservation) {
+	public boolean removeReservationLine(Reservation reservation) {
 		return reservations.remove(reservation);
 	}
 	

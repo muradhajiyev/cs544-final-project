@@ -9,7 +9,14 @@ import edu.miu.cs544.medappointment.shared.AppointmentDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -22,7 +29,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment createAppointment(AppointmentDto appointmentDto) {
-        ModelMapper modelMapper = new ModelMapper();
+        ModelMapper modelMapper=new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Appointment appointment = modelMapper.map(appointmentDto, Appointment.class);
 
@@ -36,11 +43,36 @@ public class AppointmentServiceImpl implements AppointmentService {
         return result;
     }
 
-	@Override
-	public AppointmentDto getAppointmentById(long id) throws Exception {
-		ModelMapper modelMapper = new ModelMapper(); 
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		Appointment appointment = appointmentRepository.findById(id).orElseThrow(Exception::new);
-		return modelMapper.map(appointment, AppointmentDto.class);
-	}
+    @Override
+    public List<AppointmentDto> getAll() {
+        return appointmentRepository.findAll().stream().map(appointment -> convertToAppointmentDto(appointment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<AppointmentDto> getAll(Pageable page) {
+        //first get list from the page result, then do mapping and return convert the mapped list to page
+        return new PageImpl<>(appointmentRepository.findAll(page).getContent().stream().map(appointment -> convertToAppointmentDto(appointment)).collect(Collectors.toList()));
+    }
+
+    @Override
+    public AppointmentDto getById(Long id) {
+        return convertToAppointmentDto(appointmentRepository.findById(id).get());
+    }
+
+    @Override
+    public Long getAllCount() {
+        return appointmentRepository.count();
+    }
+
+    private AppointmentDto convertToAppointmentDto(Appointment appointment) {
+        if(appointment!=null) {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+            AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+            return appointmentDto;
+        }else{
+            return null;
+        }
+    }
+
 }
