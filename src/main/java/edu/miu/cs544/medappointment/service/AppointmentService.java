@@ -5,4 +5,5 @@ import edu.miu.cs544.medappointment.shared.AppointmentDto;
 
 public interface AppointmentService {
     Appointment createAppointment(AppointmentDto appointment);
+    AppointmentDto getAppointmentById(long id) throws Exception;
 }
