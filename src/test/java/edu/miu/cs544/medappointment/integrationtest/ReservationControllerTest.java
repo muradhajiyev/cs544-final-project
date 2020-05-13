@@ -84,11 +84,10 @@ public class ReservationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status", is("PENDING")));
-        //.andExpect(jsonPath("$.id", is(appointment.getId())));
-        //.andExpect(jsonPath("$.appointment.location", is("Verill Hall #35")))
-        //.andExpect(jsonPath("$.appointment.provider.email", is("checker2@gmail.com")))
-        //.andExpect(jsonPath("$.consumer.email", is("anna@gmail.com")));
+                .andExpect(jsonPath("$.status", is("PENDING")))
+                .andExpect(jsonPath("$.appointment.location", is("Verill Hall #35")))
+                .andExpect(jsonPath("$.appointment.provider.email", is("checker2@gmail.com")))
+                .andExpect(jsonPath("$.consumer.email", is("anna@gmail.com")));
     }
 
     protected Appointment testAppointmentData(){
