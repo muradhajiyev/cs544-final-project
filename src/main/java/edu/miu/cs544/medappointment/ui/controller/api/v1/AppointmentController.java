@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +49,26 @@ public class AppointmentController {
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
+    
+    @GetMapping("/{id}")
+	public ResponseEntity<AppointmentResponseModel> getAppointmentById(@PathVariable long id)
+    {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		AppointmentDto appointment;
+		AppointmentResponseModel response;
+		try 
+		{
+			appointment = appointmentService.getById(id);
+			response = mapper.map(appointment, AppointmentResponseModel.class);
+		}
+		catch(Exception e)
+		{//No appointment with given id
+			response = null;
+			e.printStackTrace();
+		}
+		return new ResponseEntity(response, HttpStatus.CREATED);
+	}
 
     @GetMapping
     @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
