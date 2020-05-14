@@ -14,7 +14,7 @@ public interface ReservationService {
 	public List<ReservationDto> getAllReservations();
 	ReservationDto createReservation(ReservationDto reservation) throws Exception;
 	ReservationDto getReservationById(Long id);
-	ReservationDto changeStatus(ReservationDto reservationDto, Long id) throws Exception;
+	ReservationDto changeReservationStatus(ReservationDto reservationDto, Long id) throws Exception;
 	ReservationDto convertToReservationDto(Reservation reservation);
 	List<ReservationDto> viewUserReservations();
 	List<ReservationDto> convertToListReservationDto(List<Reservation> resList);

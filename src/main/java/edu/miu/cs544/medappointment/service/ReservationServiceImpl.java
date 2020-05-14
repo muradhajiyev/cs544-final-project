@@ -5,11 +5,13 @@ import edu.miu.cs544.medappointment.repository.AppointmentRepository;
 import edu.miu.cs544.medappointment.repository.ReservationRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
+import edu.miu.cs544.medappointment.shared.EmailDto;
 import edu.miu.cs544.medappointment.shared.ReservationDto;
 import edu.miu.cs544.medappointment.shared.UserDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private AppointmentRepository appointmentRepository;
     @Autowired
-    private UserRepository userRepository;
+    private JmsTemplate jmsTemplate;
     @Autowired
     private UserService userService;
 
@@ -60,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationDto changeStatus(ReservationDto reservationDto, Long id) throws Exception {
+    public ReservationDto changeReservationStatus(ReservationDto reservationDto, Long id) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = reservationRepository.findById(id).orElse(null);
@@ -68,24 +70,31 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setStatus(reservationDto.getStatus());
 
         User currentUser = userService.getAuthUser();
-        Set<Role> userRoles = currentUser.getRoles();
-        String userRole = "";
-        for(Role role: userRoles){
-            userRole = role.getName();
-        }
+        List<String> roles = currentUser.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
-        if(userRole.equals("STUDENT") && currentUser.getId() != reservation.getConsumer().getId())
+        if(roles.contains("STUDENT") && currentUser.getId() != reservation.getConsumer().getId())
             throw new Exception("Access Denied!");
 
-        if(userRole.equals("STUDENT") && !reservation.getStatus().equals(Status.CANCELED))
+        if(roles.contains("STUDENT") && !reservation.getStatus().equals(Status.CANCELED))
             throw new Exception("Student can not change reservation status to '"+ reservation.getStatus() + "'!" );
 
-        if(userRole.equals("CHECKER") && reservation.getStatus().equals(Status.CANCELED))
+        if(roles.contains("CHECKER") && reservation.getStatus().equals(Status.CANCELED))
             throw new Exception("TM Checker can not CANCEL reservation!");
 
         if(reservation==null) throw new Exception("Reservation not found!");
 
         Reservation updated = reservationRepository.save(reservation);
+
+        if (updated.getStatus() == Status.ACCEPTED || updated.getStatus() == Status.DECLINED){
+            String checkerEmail = reservationDto.getAppointment().getProvider().getEmail();
+            String studentEmail = currentUser.getEmail();
+            String message = String.format("Reservation Number #%d from the student - %s has been %s", reservation.getId(), studentEmail, updated.getStatus());
+            EmailDto checkerEmailDto = new EmailDto(checkerEmail, "Reservation Status Change", message);
+            EmailDto studentEmailDto = new EmailDto(studentEmail, "Reservation Status Change", message);
+            jmsTemplate.convertAndSend("MailNotificationQueue", checkerEmailDto);
+            jmsTemplate.convertAndSend("MailNotificationQueue", studentEmailDto);
+        }
+
         ReservationDto updateDto = convertToReservationDto(updated);
         AppointmentDto appointmentDto = modelMapper.map(appointmentRepository.getOne(updated.getAppointment().getId()), AppointmentDto.class);
         updateDto.setAppointment(appointmentDto);

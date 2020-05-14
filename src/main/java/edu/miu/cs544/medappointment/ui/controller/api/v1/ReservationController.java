@@ -36,9 +36,6 @@ public class ReservationController {
 	@Autowired
 	private AppointmentService appointmentService;
 
-	@Autowired
-	private UserService userService;
-
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STUDENT')")
 	@ApiOperation(value="Create a new reservation in the database", response= ReservationResponseModel.class)
 	@PostMapping
@@ -59,16 +56,13 @@ public class ReservationController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ReservationResponseModel> changeStatus(@PathVariable(value = "id") Long id, @Valid @RequestBody ReservationRequestModel model) throws Exception {
+	public ResponseEntity<ReservationResponseModel> changeReservationStatus(@PathVariable(value = "id") Long id, @Valid @RequestBody ReservationRequestModel model) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
-		ReservationDto updated = reservationService.changeStatus(reservationDto, id);
+		ReservationDto updated = reservationService.changeReservationStatus(reservationDto, id);
 
 		ReservationResponseModel response = mapper.map(updated, ReservationResponseModel.class);
-		//AppointmentResponseModel appointment = mapper.map(updated.getAppointmentDto(), AppointmentResponseModel.class);
-		//response.setAppointment(appointment);
-
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 	
@@ -98,7 +92,7 @@ public class ReservationController {
 		
 	}
 	@PutMapping(value = "/{id}/cancel")
-	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long id) throws Exception {
+	public ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long id) throws Exception {
 		ReservationDto reservation = reservationService.cancelReservation(id);
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
