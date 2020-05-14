@@ -14,4 +14,5 @@ public interface AppointmentService {
     AppointmentDto getById(Long id);
     Page<ReservationDto> getAppointmentReservations(long id, Pageable pageable);
     Appointment updateAppointmentById(Long appointmentIs, AppointmentDto appointment) throws Exception;
+    void deleteAppointment(Long appointmentId);
 }

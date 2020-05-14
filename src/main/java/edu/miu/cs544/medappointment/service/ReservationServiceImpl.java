@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,14 +66,8 @@ public class ReservationServiceImpl implements ReservationService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
 
-        if(reservationRepository.findById(id)==null) throw new Exception("Reservation not found!");
-        System.out.println(id);
-        System.out.println(reservationDto.getAppointmentDto());
+        if(reservationRepository.findById(id) == null) throw new Exception("Reservation not found!");
         reservation.setId(id);
-        System.out.println("RESERVATION::::::::::::");
-        System.out.println(reservationDto.getAppointmentDto().getId());
-        System.out.println(reservation.getId() + ": " + reservation.getStatus());
-
         Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
         if(appointment==null) throw new Exception("Appointment not found!");
         reservation.setAppointment(appointment);
@@ -134,5 +130,47 @@ public class ReservationServiceImpl implements ReservationService {
         Appointment appointment = appointmentRepository.getOne(1L);
         return appointment;
     }
+
+    @Override
+    public ReservationDto cancelReservation(Long id) throws Exception {
+        System.out.println("Reservation ID:"+id);
+        Optional<Reservation> currentReservation = reservationRepository.findById(id);
+        if (!currentReservation.isPresent())
+            throw new Exception("The Reservation not found");
+
+        Reservation reservation = currentReservation.get();
+        reservation.setStatus(Status.CANCELED);
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Reservation updatedReservation = reservationRepository.save(reservation);
+        return mapper.map(updatedReservation, ReservationDto.class);
+    }
+    /*@Autowired
+	private ModelMapper modelMapper;
+	@Autowired
+	private ReservationRepository reservationRepository;*/
+
+	@Override
+	public ReservationDto getReservationbyId(long id) throws Exception 
+	{
+		ModelMapper modelMapper = new ModelMapper(); 
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		Reservation reservation = reservationRepository.findById(id).orElseThrow(Exception::new);
+		return modelMapper.map(reservation, ReservationDto.class);
+	}
+
+	@Override
+	public List<ReservationDto> getAllReservations()
+	{
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		List<Reservation> reservations = reservationRepository.findAll();
+		if (reservations != null)
+			return reservations.stream().map(entity -> modelMapper.map(entity, ReservationDto.class))
+					.collect(Collectors.toList());
+		else
+			return null;
+	}
 
 }

@@ -111,4 +111,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         return reservationDto;
     }
 
+    @Override
+    public void deleteAppointment(Long appointmentId) {
+        reservationRepository.deleteAllByAppointment_Id(appointmentId);
+        appointmentRepository.deleteById(appointmentId);
+    }
+
 }

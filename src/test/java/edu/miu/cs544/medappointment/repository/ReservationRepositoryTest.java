@@ -4,7 +4,6 @@ import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Reservation;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,37 @@ class ReservationRepositoryTest {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    @Test
+    public void testCancelReservationByReservationId() {
+        //given
+        //TODO: replace userStudent by the Authenticated user (student)
+        User user = new User("TM Checker", "TM Checker", "checker@gmail.com", "checker", "123456");
+
+        Appointment appointment = new Appointment();
+        appointment.setDateTime(LocalDateTime.now());
+        appointment.setLocation("McLaughlin");
+        appointment.setProvider(user);
+
+        User user1 = entityManager.persist(user);
+        Appointment appointment1 = entityManager.persist(appointment);
+        entityManager.flush();
+
+        Reservation persisted_data = new Reservation();
+        persisted_data.setCreatedAt(new Date());
+        persisted_data.setUpdatedAt(new Date());
+        persisted_data.setStatus(Status.PENDING);
+        persisted_data.setAppointment(appointment);
+        persisted_data.setConsumer(user);
+        entityManager.persist(persisted_data);
+        entityManager.flush();
+        // checking the status is changed to DECLINED
+        // when
+        Reservation updateReservation = reservationRepository.findById(persisted_data.getId()).get();
+        updateReservation.setStatus(Status.DECLINED);
+        reservationRepository.save(updateReservation);
+        // then
+        assertEquals(Status.DECLINED, updateReservation.getStatus());
+    }
     @Test
     public void whenFindById_ValidId_thenReturnReservation(){
         //TODO: replace userStudent by the Authenticated user (student)

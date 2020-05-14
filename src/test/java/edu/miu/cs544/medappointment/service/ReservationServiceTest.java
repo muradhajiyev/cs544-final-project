@@ -53,6 +53,7 @@ class ReservationServiceTest {
         appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35", checker);
 
         reservation = new Reservation();
+        reservation.setId(1L);
         reservation.setStatus(Status.PENDING);
         reservation.setConsumer(student);
         reservation.setAppointment(appointment);
@@ -60,10 +61,10 @@ class ReservationServiceTest {
         //mocking
         when(userRepository.save(any(User.class))).thenReturn(student);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+        when(reservationRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(reservation));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
     }
-/*
-    @Test
+/*    @Test
     void createReservation_ReservationEntity_ThenReturnSavedReservation() throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -85,9 +86,15 @@ class ReservationServiceTest {
         assertEquals(appointment.getLocation(), createdDto.getAppointmentDto().getLocation());
         assertEquals(checker.getEmail(), createdDto.getAppointmentDto().getProvider().getEmail());
         assertEquals(reservation.getStatus(), createdDto.getStatus());
-    }
+    }*/
+
 
     @Test
+    void testCancelReservationByReservationId() throws Exception {
+        ReservationDto cancelReservation = reservationService.cancelReservation(1L);
+        assertEquals(Status.CANCELED, cancelReservation.getStatus());
+    }
+ /*   @Test
     void changeReservationStatus_ValidIdStatus_ThenReturnChangedReservation() throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -101,7 +108,7 @@ class ReservationServiceTest {
         Reservation changed = modelMapper.map(changedDto, Reservation.class);
 
         assertEquals(Status.CANCELED, changed.getStatus());
-    }
-    */
+    }*/
+
 
 }

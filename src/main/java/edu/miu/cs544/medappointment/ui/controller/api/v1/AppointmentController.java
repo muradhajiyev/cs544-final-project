@@ -1,6 +1,7 @@
 package edu.miu.cs544.medappointment.ui.controller.api.v1;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
+import edu.miu.cs544.medappointment.repository.ReservationRepository;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.service.AppointmentService;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
@@ -38,6 +39,8 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CHECKER')")
     @PostMapping
@@ -115,5 +118,11 @@ public class AppointmentController {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         AppointmentResponseModel appointmentResponseModel = modelMapper.map(appointment, AppointmentResponseModel.class);
         return appointmentResponseModel;
+    }
+
+    @DeleteMapping("/{appointmentId}")
+    public void deleteAppointment(@PathVariable long appointmentId){
+        reservationRepository.deleteAllByAppointment_Id(appointmentId);
+        appointmentService.deleteAppointment(appointmentId);
     }
 }

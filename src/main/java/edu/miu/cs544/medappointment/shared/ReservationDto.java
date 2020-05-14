@@ -65,6 +65,7 @@ public class ReservationDto implements Serializable {
         this.appointmentDto = appointmentDto;
     }
 
+
     public Long getId() {
         return id;
     }

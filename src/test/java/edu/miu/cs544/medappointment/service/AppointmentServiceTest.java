@@ -22,17 +22,16 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -138,5 +137,20 @@ class AppointmentServiceTest {
 
         assertEquals("Hi Rise", created.getLocation());
 
+    }
+
+    @Test
+    void testDeleteAppointment() {
+//        ModelMapper modelMapper = new ModelMapper();
+//        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+//        Appointment created = appointmentService.createAppointment(appointmentDto);
+//        appointmentService.deleteAppointment(created.getId());
+//        assertNull(null, (Supplier<String>) appointment.getReservation());
+
+        // Delete All Reservations which is belong to Appointment.
+        // Get All Reservations with appointment id, assert it . assert should equal to NULL assertNull (check it)
+        // Delete Appointment
+        // assert it.
     }
 }
