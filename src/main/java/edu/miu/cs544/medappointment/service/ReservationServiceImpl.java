@@ -65,12 +65,16 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationDto changeReservationStatus(ReservationDto reservationDto, Long id) throws Exception {
+    public ReservationDto changeReservationStatus(String status, Long id) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = reservationRepository.findById(id).orElse(null);
         if(reservation==null) throw new Exception("Reservation not found!");
-        reservation.setStatus(reservationDto.getStatus());
+        //reservation.setStatus(reservationDto.getStatus());
+        if(status.equals("CANCELED")) reservation.setStatus(Status.CANCELED);
+        else if(status.equals("ACCEPTED")) reservation.setStatus(Status.ACCEPTED);
+        else if(status.equals("DECLINED")) reservation.setStatus(Status.DECLINED);
+        else if(status.equals("PENDING")) reservation.setStatus(Status.PENDING);
 
         User currentUser = userService.getAuthUser();
         List<String> roles = currentUser.getRoles().stream().map(Role::getName).collect(Collectors.toList());
@@ -81,8 +85,8 @@ public class ReservationServiceImpl implements ReservationService {
         if(roles.contains("STUDENT") && !reservation.getStatus().equals(Status.CANCELED))
             throw new Exception("Student can not change reservation status to '"+ reservation.getStatus() + "'!" );
 
-        if(roles.contains("CHECKER") && (reservation.getStatus().equals(Status.CANCELED) || currentUser.getId() != reservation.getAppointment().getProvider().getId()))
-            throw new Exception("Only TM Checker can not CANCEL reservation!");
+        if(roles.contains("CHECKER") && reservation.getStatus().equals(Status.CANCELED))
+            throw new Exception("TM Checker can not CANCEL reservation!");
 
         if(reservation==null) throw new Exception("Reservation not found!");
 
@@ -90,7 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         if (updated.getStatus() == Status.ACCEPTED || updated.getStatus() == Status.DECLINED){
             String checkerEmail = reservation.getAppointment().getProvider().getEmail();
-            String studentEmail = reservation.getConsumer().getEmail();
+            String studentEmail = currentUser.getEmail();
             String message = String.format("Reservation Number #%d from the student - %s has been %s", reservation.getId(), studentEmail, updated.getStatus());
             EmailDto checkerEmailDto = new EmailDto(checkerEmail, "Reservation Status Change", message);
             EmailDto studentEmailDto = new EmailDto(studentEmail, "Reservation Status Change", message);
