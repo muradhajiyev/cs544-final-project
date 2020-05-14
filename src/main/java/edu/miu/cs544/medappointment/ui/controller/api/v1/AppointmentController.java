@@ -39,8 +39,6 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
-    @Autowired
-    private ReservationRepository reservationRepository;
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CHECKER')")
     @PostMapping
@@ -69,15 +67,15 @@ public class AppointmentController {
 
     @GetMapping
     @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
-    public ResponseEntity<Page<AppointmentResponseModel>> getAll(Pageable page, @ApiParam(name =  "status", type = "String", required = false) @RequestParam Optional<Status> status){
-        Page<AppointmentResponseModel> result=appointmentService.getAll(page,status).map(appointment -> convertToAppointmentResponseModel(appointment));
+    public ResponseEntity<Page<AppointmentResponseModel>> getAllAppointments(Pageable page, @ApiParam(name =  "status", type = "String", required = false) @RequestParam Optional<Status> status){
+        Page<AppointmentResponseModel> result = appointmentService.getAll(page,status).map(appointment -> convertToAppointmentResponseModel(appointment));
         return new ResponseEntity(result,HttpStatus.OK);
     }
 
     @GetMapping("/available")
     @ApiOperation(value="Get All Available Appointments", response=AppointmentResponseModel.class, responseContainer = "List")
-    public ResponseEntity<Page<AppointmentResponseModel>> getAllAvailable(Pageable page){
-        Page<AppointmentResponseModel> result=appointmentService.getAllAvailable(page).map(appointment -> convertToAppointmentResponseModel(appointment));
+    public ResponseEntity<Page<AppointmentResponseModel>> getAllAvailableAppointments(Pageable page){
+        Page<AppointmentResponseModel> result = appointmentService.getAllAvailable(page).map(appointment -> convertToAppointmentResponseModel(appointment));
         return new ResponseEntity(result,HttpStatus.OK);
     }
 
@@ -98,7 +96,6 @@ public class AppointmentController {
 
         Appointment appointment = appointmentService.updateAppointmentById(id, appointmentDto);
         AppointmentResponseModel response = mapper.map(appointment, AppointmentResponseModel.class);
-
         return new ResponseEntity(response, HttpStatus.OK);
     }
 

@@ -16,6 +16,8 @@ import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -68,28 +70,20 @@ public class ReservationController {
 	
 	@ApiOperation(value="Get Reservations for the current user", response= ReservationResponseModel.class)
 	@GetMapping
-	public ResponseEntity<List<ReservationResponseModel>> getUserReservations()
+	public ResponseEntity<List<ReservationResponseModel>> getUserReservations(Pageable pageable)
 	{
-
-		List<ReservationResponseModel> response = convertToListReservationResponse(
-													reservationService.viewUserReservations());
-
+		Page<ReservationResponseModel> response = reservationService.getUserReservations(pageable).map(r -> convertToReservationResponse(r));
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
-	public List<ReservationResponseModel> convertToListReservationResponse(List<ReservationDto> resList)
+	public ReservationResponseModel convertToReservationResponse(ReservationDto reservationDto)
 	{
-		if(null == resList)
+		if(reservationDto == null)
 			return null;
-		else
-		{
+
 			ModelMapper mapper = new ModelMapper();
 			mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			return resList.stream()
-					.map(entity -> mapper.map(entity, ReservationResponseModel.class))
-					.collect(Collectors.toList());
-		}
-		
+			return mapper.map(reservationDto, ReservationResponseModel.class);
 	}
 
 //	@PutMapping(value = "/{id}/cancel")
