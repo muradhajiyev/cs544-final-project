@@ -18,7 +18,7 @@ public class ReservationRequestModel {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private Long consumerId;
+    //private Long consumerId;
     private Long appointmentId;
 
     public ReservationRequestModel() {
@@ -39,13 +39,13 @@ public class ReservationRequestModel {
         this.status = status;
     }
 
-    public Long getConsumerId() {
+    /*public Long getConsumerId() {
         return consumerId;
     }
 
     public void setConsumerId(Long consumerId) {
         this.consumerId = consumerId;
-    }
+    }*/
 
     public Long getAppointmentId() {
         return appointmentId;
