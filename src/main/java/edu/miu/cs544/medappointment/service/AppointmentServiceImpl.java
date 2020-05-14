@@ -38,6 +38,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
         ModelMapper modelMapper = new ModelMapper();
@@ -45,8 +48,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = modelMapper.map(appointmentDto, Appointment.class);
 
         // authenticated user
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmailOrUsername(auth.getName(), auth.getName());
+        User user = userService.getAuthUser();
 
         appointment.setProvider(user);
         Appointment result = appointmentRepository.save(appointment);

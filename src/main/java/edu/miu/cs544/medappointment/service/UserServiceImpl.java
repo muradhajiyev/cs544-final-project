@@ -25,6 +25,6 @@ public class UserServiceImpl implements UserService {
     public User getAuthUser() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         String username = securityContext.getAuthentication().getName();
-        return userRepository.findByUsername(username);
+        return userRepository.findByEmailOrUsername(username, username);
     }
 }

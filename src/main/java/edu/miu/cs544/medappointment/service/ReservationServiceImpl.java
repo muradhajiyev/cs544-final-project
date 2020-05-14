@@ -42,13 +42,11 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
 
         Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
-        if(appointment==null) throw new Exception("Appointment not found");
+        if (appointment == null) throw new Exception("Appointment not found");
         reservation.setAppointment(appointment);
 
-        // TODO:: get authenticated User and pass to appointmentDto
-        // this is hardcoded, we should get user from Authentication manager.
         User userStudent = userService.getAuthUser();
-        if(userStudent==null) throw new Exception("User not found!");
+        if (userStudent == null) throw new Exception("User not found!");
         reservation.setConsumer(userStudent);
 
         Reservation result = reservationRepository.save(reservation);
@@ -66,18 +64,18 @@ public class ReservationServiceImpl implements ReservationService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
 
-        if(reservationRepository.findById(id) == null) throw new Exception("Reservation not found!");
+        if (reservationRepository.findById(id) == null) throw new Exception("Reservation not found!");
         reservation.setId(id);
         Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
-        if(appointment==null) throw new Exception("Appointment not found!");
+        if (appointment == null) throw new Exception("Appointment not found!");
         reservation.setAppointment(appointment);
 
         User consumer = userRepository.getOne(3L);
-        if(consumer==null) throw new Exception("Consumer not found!");
+        if (consumer == null) throw new Exception("Consumer not found!");
         reservation.setConsumer(consumer);
 
 
-        if(reservation!=null){
+        if (reservation != null) {
             Reservation updated = reservationRepository.save(reservation);
             return convertToReservationDto(updated);
         }
@@ -86,54 +84,40 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationDto convertToReservationDto(Reservation reservation) {
-        if(reservation!=null) {
+        if (reservation != null) {
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             ReservationDto reservationDto = modelMapper.map(reservation, ReservationDto.class);
             return reservationDto;
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
-	public List<ReservationDto> viewUserReservations()
-    {
+    public List<ReservationDto> viewUserReservations() {
         User userStudent = userService.getAuthUser();
-		List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
-		List<ReservationDto> ret = new ArrayList<>();
-		for(int i = 0; i < r.size(); i++)
-			if(r.get(i).getConsumer().getId() == userStudent.getId())
-				ret.add(r.get(i));
-		return ret;
-	}
-    
+        List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
+        List<ReservationDto> ret = new ArrayList<>();
+        for (int i = 0; i < r.size(); i++)
+            if (r.get(i).getConsumer().getId() == userStudent.getId())
+                ret.add(r.get(i));
+        return ret;
+    }
+
     @Override
-	public List<ReservationDto> convertToListReservationDto(List<Reservation> resList)
-	{
-		if(null == resList)
-			return null;
-		else
-		{
-			ModelMapper modelMapper = new ModelMapper();
-			return resList.stream()
-					.map(entity -> modelMapper.map(entity, ReservationDto.class))
-					.collect(Collectors.toList());
-		}
-		
-	}
-    
-    protected Appointment testAppointmentData(){
-        User userChecker = userRepository.getOne(2L);
-        //Appointment appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35",userChecker);
-        //return appointmentRepository.save(appointment);
-        Appointment appointment = appointmentRepository.getOne(1L);
-        return appointment;
+    public List<ReservationDto> convertToListReservationDto(List<Reservation> resList) {
+        if (resList == null)
+            return null;
+
+        ModelMapper modelMapper = new ModelMapper();
+        return resList.stream()
+                .map(entity -> modelMapper.map(entity, ReservationDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public ReservationDto cancelReservation(Long id) throws Exception {
-        System.out.println("Reservation ID:"+id);
         Optional<Reservation> currentReservation = reservationRepository.findById(id);
         if (!currentReservation.isPresent())
             throw new Exception("The Reservation not found");
@@ -146,31 +130,26 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation updatedReservation = reservationRepository.save(reservation);
         return mapper.map(updatedReservation, ReservationDto.class);
     }
-    /*@Autowired
-	private ModelMapper modelMapper;
-	@Autowired
-	private ReservationRepository reservationRepository;*/
 
-	@Override
-	public ReservationDto getReservationbyId(long id) throws Exception 
-	{
-		ModelMapper modelMapper = new ModelMapper(); 
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		Reservation reservation = reservationRepository.findById(id).orElseThrow(Exception::new);
-		return modelMapper.map(reservation, ReservationDto.class);
-	}
+    @Override
+    public ReservationDto getReservationbyId(long id) throws Exception {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(Exception::new);
+        return modelMapper.map(reservation, ReservationDto.class);
+    }
 
-	@Override
-	public List<ReservationDto> getAllReservations()
-	{
-		ModelMapper modelMapper = new ModelMapper();
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		List<Reservation> reservations = reservationRepository.findAll();
-		if (reservations != null)
-			return reservations.stream().map(entity -> modelMapper.map(entity, ReservationDto.class))
-					.collect(Collectors.toList());
-		else
-			return null;
-	}
+    @Override
+    public List<ReservationDto> getAllReservations() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        if (reservations == null)
+            return null;
+
+        return reservations.stream().map(entity -> modelMapper.map(entity, ReservationDto.class))
+                .collect(Collectors.toList());
+    }
 
 }
