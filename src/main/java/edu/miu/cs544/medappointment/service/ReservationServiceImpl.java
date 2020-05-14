@@ -66,14 +66,8 @@ public class ReservationServiceImpl implements ReservationService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
 
-        if(reservationRepository.findById(id)==null) throw new Exception("Reservation not found!");
-        System.out.println(id);
-        System.out.println(reservationDto.getAppointmentDto());
+        if(reservationRepository.findById(id) == null) throw new Exception("Reservation not found!");
         reservation.setId(id);
-        System.out.println("RESERVATION::::::::::::");
-        System.out.println(reservationDto.getAppointmentDto().getId());
-        System.out.println(reservation.getId() + ": " + reservation.getStatus());
-
         Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
         if(appointment==null) throw new Exception("Appointment not found!");
         reservation.setAppointment(appointment);
