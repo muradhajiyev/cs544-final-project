@@ -120,10 +120,9 @@ public class AppointmentController {
         return appointmentResponseModel;
     }
 
-    @DeleteMapping("/{appointmentId}")
-    public void deleteAppointment(@PathVariable long appointmentId){
-//        reservationRepository.deleteAllByAppointment_Id(appointmentId);
-        appointmentService.deleteAppointment(appointmentId);
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteAppointment(@PathVariable long id){
+        appointmentService.deleteAppointment(id);
+        return ResponseEntity.ok().build();
     }
 }
