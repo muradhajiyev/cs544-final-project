@@ -2,11 +2,13 @@ package edu.miu.cs544.medappointment.ui.controller.api.v1;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.repository.ReservationRepository;
+import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.service.AppointmentService;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
 import edu.miu.cs544.medappointment.ui.model.AppointmentRequestModel;
 import edu.miu.cs544.medappointment.ui.model.AppointmentResponseModel;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,11 +55,32 @@ public class AppointmentController {
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
+    
+    @GetMapping("/{id}")
+    @ApiOperation(value="Get an appointment by id", response=AppointmentResponseModel.class)
+	public ResponseEntity<AppointmentResponseModel> getAppointmentById(@PathVariable long id)
+    {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		AppointmentDto appointment;
+		AppointmentResponseModel response;
+		try 
+		{
+			appointment = appointmentService.getById(id);
+			response = mapper.map(appointment, AppointmentResponseModel.class);
+		}
+		catch(Exception e)
+		{//No appointment with given id
+			response = null;
+			e.printStackTrace();
+		}
+		return new ResponseEntity(response, HttpStatus.CREATED);
+	}
 
     @GetMapping
     @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
-    public ResponseEntity<Page<AppointmentResponseModel>> getAll(Pageable page){
-        Page<AppointmentResponseModel> result=new PageImpl<AppointmentResponseModel>(appointmentService.getAll(page)
+    public ResponseEntity<Page<AppointmentResponseModel>> getAll(Pageable page, @ApiParam(name =  "status", type = "String", required = false) @RequestParam Optional<Status> status){
+        Page<AppointmentResponseModel> result=new PageImpl<AppointmentResponseModel>(appointmentService.getAll(page,status)
                 .getContent().stream()
                 .map(appointment -> convertToAppointmentResponseModel(appointment))
                 .collect(Collectors.toList())
@@ -62,23 +88,19 @@ public class AppointmentController {
         return new ResponseEntity(result,HttpStatus.OK);
     }
 
-    @GetMapping(params = "fetch-all=true")
-    @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
-    public ResponseEntity<List<AppointmentResponseModel>> getAll(){
-        List<AppointmentResponseModel> result=appointmentService.getAll().stream()
-                .map(appointment -> convertToAppointmentResponseModel(appointment))
-                .collect(Collectors.toList());
-        return new ResponseEntity(result,HttpStatus.OK);
+    @PutMapping("/update/{appointmentId}")
+    @ApiOperation(value="Update an appointment by id", response=AppointmentResponseModel.class)
+    public ResponseEntity<AppointmentResponseModel> updateAppointment(@PathVariable Long appointmentId, @Valid @RequestBody AppointmentRequestModel model) throws Exception {
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentDto appointmentDto = mapper.map(model, AppointmentDto.class);
+
+        Appointment appointment = appointmentService.updateAppointmentById(appointmentId, appointmentDto);
+        AppointmentResponseModel response = mapper.map(appointment, AppointmentResponseModel.class);
+
+        return new ResponseEntity(response, HttpStatus.OK);
     }
-
-    @GetMapping("/count")
-    @ApiOperation(value="Get All Appoinments", response=Long.class)
-    public ResponseEntity<Long> getAllCount() {
-        Long result=appointmentService.getAllCount();
-        return new ResponseEntity(result,HttpStatus.OK);
-    }
-
-
 
     private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
         if(appointment == null)

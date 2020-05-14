@@ -82,5 +82,8 @@ public class Appointment {
 	public boolean removeReservationLine(Reservation reservation) {
 		return reservations.remove(reservation);
 	}
-	
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

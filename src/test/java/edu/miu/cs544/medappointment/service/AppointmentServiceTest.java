@@ -19,8 +19,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,43 +58,32 @@ class AppointmentServiceTest {
         appointments.add(appointment);
         appointmentsPage=new PageImpl<>(appointments);
 
+        Appointment updateAppointment = new Appointment();
+        updateAppointment.setId(appointment.getId());
+        updateAppointment.setLocation("Hi Rise");
+        updateAppointment.setDateTime(appointment.getDateTime().plusMinutes(5));
+        updateAppointment.setProvider(appointment.getProvider());
+
         //mocking
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(appointmentRepository.findAll()).thenReturn(appointments);
         when(appointmentRepository.findAll(any(Pageable.class))).thenReturn(appointmentsPage);
         when(appointmentRepository.count()).thenReturn(1L);
-    }
-
-    @Test
-    void getAllAppointment_ThenReturnListofAppointment() {
-
-        List<AppointmentDto> appointmentListResult=appointmentService.getAll();
-
-        assertEquals(appointments.get(0).getLocation(), appointmentListResult.get(0).getLocation());
-        assertEquals(appointments.get(0).getDateTime(), appointmentListResult.get(0).getDateTime());
-        assertEquals(appointments.get(0).getProvider(), appointmentListResult.get(0).getProvider());
+        when(appointmentRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(appointment));
+        when(appointmentRepository.save(any(Appointment.class))).thenReturn(updateAppointment);
     }
 
     @Test
     void getAllAppointment_Pagable_ThenReturnPageAppointment() {
 
         Pageable page=PageRequest.of(0,20);
-        Page<AppointmentDto> appointmentListResult=appointmentService.getAll(page);
+        Page<AppointmentDto> appointmentListResult=appointmentService.getAll(page, Optional.empty());
         assertEquals(appointmentsPage.getContent().get(0).getLocation(), appointmentListResult.getContent().get(0).getLocation());
         assertEquals(appointmentsPage.getContent().get(0).getDateTime(), appointmentListResult.getContent().get(0).getDateTime());
         assertEquals(appointmentsPage.getContent().get(0).getProvider(), appointmentListResult.getContent().get(0).getProvider());
     }
-
-    @Test
-    void getAllCount_ThenReturnCountNumber() {
-
-        Pageable page=PageRequest.of(0,20);
-        Long count =appointmentService.getAllCount();
-        assertEquals(1L, count);
-    }
-
-
 
     @Test
     void createAppointment_AppointmentEntity_ThenReturnSavedAppointment() {
@@ -102,6 +93,39 @@ class AppointmentServiceTest {
         Appointment created = appointmentService.createAppointment(appointmentDto);
         assertEquals(user.getEmail(), created.getProvider().getEmail());
         assertEquals(created.getLocation(), created.getLocation());
+    }
+    
+    @Test
+    void getAppointmentById_Id_ThenReturnAppointment() throws Exception 
+    {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+
+
+        AppointmentDto returned = appointmentService.getById(1L);
+
+        assertEquals(returned.getProvider().getEmail(), appointment.getProvider().getEmail());
+        assertEquals(returned.getDateTime(), appointment.getDateTime());
+    }
+
+    @Test
+    void updateAppointmentById_AppointmentEntity_ReturnUpdated() throws Exception {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+
+        Appointment created = appointmentService.createAppointment(appointmentDto);
+
+        AppointmentDto appointmentDto2 = modelMapper.map(created, AppointmentDto.class);
+        created.setDateTime(created.getDateTime().plusMinutes(5));
+        created.setLocation("Hi Rise");
+
+
+        appointmentService.updateAppointmentById(appointmentDto.getId(), appointmentDto2);
+
+        assertEquals("Hi Rise", created.getLocation());
+
     }
 
     @Test

@@ -16,6 +16,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 @EnableSwagger2
@@ -33,7 +34,8 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("edu.miu.cs544.medappointment.ui.controller.api"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .genericModelSubstitutes(Optional.class);
     }
 
     private ApiInfo metadata(){
