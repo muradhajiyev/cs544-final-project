@@ -40,11 +40,13 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STUDENT')")
 	@ApiOperation(value="Create a new reservation in the database", response= ReservationResponseModel.class)
 	@PostMapping
-	public ResponseEntity<ReservationResponseModel> createReservation(@Valid @RequestBody ReservationRequestModel model) throws Exception {
+	public ResponseEntity<ReservationResponseModel> createReservation(@Valid @RequestBody Long appointmentId) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
-		reservationDto.setAppointment(appointmentService.getById(model.getAppointmentId()));
+		//ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
+		ReservationDto reservationDto = new ReservationDto();
+		//reservationDto.setAppointment(appointmentService.getById(model.getAppointmentId()));
+		reservationDto.setAppointment(appointmentService.getById(appointmentId));
 		ReservationDto reservation = reservationService.createReservation(reservationDto);
 
 		ReservationResponseModel response = mapper.map(reservation, ReservationResponseModel.class);
@@ -57,14 +59,17 @@ public class ReservationController {
 	}
 
 	@PutMapping("/{id}")
-	@ApiOperation(value="Change the reservation status", response= ReservationResponseModel.class)
-	public ResponseEntity<ReservationResponseModel> changeReservationStatus(@PathVariable(value = "id") Long id, @Valid @RequestBody ReservationRequestModel model) throws Exception {
+	public ResponseEntity<ReservationResponseModel> changeStatus(@PathVariable(value = "id") Long id, @Valid @RequestBody String status) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
-		ReservationDto updated = reservationService.changeReservationStatus(reservationDto, id);
+		//ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
+		ReservationDto reservationDto = new ReservationDto();
+		ReservationDto updated = reservationService.changeReservationStatus(status, id);
 
 		ReservationResponseModel response = mapper.map(updated, ReservationResponseModel.class);
+		//AppointmentResponseModel appointment = mapper.map(updated.getAppointmentDto(), AppointmentResponseModel.class);
+		//response.setAppointment(appointment);
+
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 	

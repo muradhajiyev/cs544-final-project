@@ -16,7 +16,7 @@ public interface ReservationService {
 	public List<ReservationDto> getAllReservations();
 	ReservationDto createReservation(ReservationDto reservation) throws Exception;
 	ReservationDto getReservationById(Long id);
-	ReservationDto changeReservationStatus(ReservationDto reservationDto, Long id) throws Exception;
+	ReservationDto changeReservationStatus(String status, Long id) throws Exception;
 	Page<ReservationDto> getUserReservations(Pageable pageable);
 	ReservationDto getReservation(Long id) throws Exception;
 	boolean checkHasAcceptedReservations(Long appointmentId);
