@@ -61,6 +61,12 @@ class AppointmentServiceTest {
         appointments.add(appointment);
         appointmentsPage=new PageImpl<>(appointments);
 
+        Appointment updateAppointment = new Appointment();
+        updateAppointment.setId(appointment.getId());
+        updateAppointment.setLocation("Hi Rise");
+        updateAppointment.setDateTime(appointment.getDateTime().plusMinutes(5));
+        updateAppointment.setProvider(appointment.getProvider());
+
         //mocking
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
@@ -68,6 +74,8 @@ class AppointmentServiceTest {
         when(appointmentRepository.findAll()).thenReturn(appointments);
         when(appointmentRepository.findAll(any(Pageable.class))).thenReturn(appointmentsPage);
         when(appointmentRepository.count()).thenReturn(1L);
+        when(appointmentRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(appointment));
+        when(appointmentRepository.save(any(Appointment.class))).thenReturn(updateAppointment);
     }
 
     @Test
@@ -102,5 +110,24 @@ class AppointmentServiceTest {
 
         assertEquals(returned.getProvider().getEmail(), appointment.getProvider().getEmail());
         assertEquals(returned.getDateTime(), appointment.getDateTime());
+    }
+
+    @Test
+    void updateAppointmentById_AppointmentEntity_ReturnUpdated() throws Exception {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+
+        Appointment created = appointmentService.createAppointment(appointmentDto);
+
+        AppointmentDto appointmentDto2 = modelMapper.map(created, AppointmentDto.class);
+        created.setDateTime(created.getDateTime().plusMinutes(5));
+        created.setLocation("Hi Rise");
+
+
+        appointmentService.updateAppointmentById(appointmentDto.getId(), appointmentDto2);
+
+        assertEquals("Hi Rise", created.getLocation());
+
     }
 }

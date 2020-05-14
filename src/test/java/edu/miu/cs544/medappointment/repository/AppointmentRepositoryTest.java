@@ -86,4 +86,21 @@ class AppointmentRepositoryTest {
         Page<Appointment> found = appointmentRepository.findDistinctByReservationsStatus(Status.PENDING, page);
         assertEquals(appointments.get(0).getLocation(),found.getContent().get(0).getLocation());
     }
+
+    @Test
+    public void whenUpdateAppointmentById_ValidId_thenReturnUpdatedAppointment(){
+        //when
+        Optional<Appointment> found = appointmentRepository.findById(appointments.get(0).getId());
+
+        Appointment updated = found.get();
+        updated.setLocation("Veri Hall");
+
+
+        entityManager.persist(updated);
+        entityManager.flush();
+
+        // then
+        assertEquals(updated.getLocation(), appointments.get(0).getLocation());
+
+    }
 }
