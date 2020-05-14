@@ -64,7 +64,14 @@ class ReservationServiceTest {
         when(reservationRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(reservation));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
     }
-/*    @Test
+    @Test
+    void testCancelReservationByReservationId() throws Exception {
+        ReservationDto cancelReservation = reservationService.cancelReservation(1L);
+        assertEquals(Status.CANCELED, cancelReservation.getStatus());
+    }
+
+    /*
+    @Test
     void createReservation_ReservationEntity_ThenReturnSavedReservation() throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -86,15 +93,9 @@ class ReservationServiceTest {
         assertEquals(appointment.getLocation(), createdDto.getAppointmentDto().getLocation());
         assertEquals(checker.getEmail(), createdDto.getAppointmentDto().getProvider().getEmail());
         assertEquals(reservation.getStatus(), createdDto.getStatus());
-    }*/
-
+    }
 
     @Test
-    void testCancelReservationByReservationId() throws Exception {
-        ReservationDto cancelReservation = reservationService.cancelReservation(1L);
-        assertEquals(Status.CANCELED, cancelReservation.getStatus());
-    }
- /*   @Test
     void changeReservationStatus_ValidIdStatus_ThenReturnChangedReservation() throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -108,7 +109,7 @@ class ReservationServiceTest {
         Reservation changed = modelMapper.map(changedDto, Reservation.class);
 
         assertEquals(Status.CANCELED, changed.getStatus());
-    }*/
-
+    }
+    */
 
 }

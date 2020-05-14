@@ -1,14 +1,12 @@
 package edu.miu.cs544.medappointment.service;
 
-import edu.miu.cs544.medappointment.entity.Appointment;
-import edu.miu.cs544.medappointment.entity.Reservation;
-import edu.miu.cs544.medappointment.entity.Status;
-import edu.miu.cs544.medappointment.entity.User;
+import edu.miu.cs544.medappointment.entity.*;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
 import edu.miu.cs544.medappointment.repository.ReservationRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
 import edu.miu.cs544.medappointment.shared.ReservationDto;
+import edu.miu.cs544.medappointment.shared.UserDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +14,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,17 +36,22 @@ public class ReservationServiceImpl implements ReservationService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
+        reservation.setStatus(Status.PENDING);
 
         Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
-        if (appointment == null) throw new Exception("Appointment not found");
+        if(appointment==null) throw new Exception("Appointment not found");
         reservation.setAppointment(appointment);
 
+        // Getting user from Authentication manager.
         User userStudent = userService.getAuthUser();
-        if (userStudent == null) throw new Exception("User not found!");
+        if(userStudent==null) throw new Exception("User not found!");
         reservation.setConsumer(userStudent);
 
         Reservation result = reservationRepository.save(reservation);
-        return convertToReservationDto(result);
+        ReservationDto createdDto = convertToReservationDto(result);
+        UserDto consumerDto = modelMapper.map(userStudent, UserDto.class);
+        createdDto.setConsumerDto(consumerDto);
+        return createdDto;
     }
 
     @Override
@@ -62,24 +63,33 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationDto changeStatus(ReservationDto reservationDto, Long id) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
+        Reservation reservation = reservationRepository.findById(id).orElse(null);
+        if(reservation==null) throw new Exception("Reservation not found!");
+        reservation.setStatus(reservationDto.getStatus());
 
-        if (reservationRepository.findById(id) == null) throw new Exception("Reservation not found!");
-        reservation.setId(id);
-        Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
-        if (appointment == null) throw new Exception("Appointment not found!");
-        reservation.setAppointment(appointment);
-
-        User consumer = userRepository.getOne(3L);
-        if (consumer == null) throw new Exception("Consumer not found!");
-        reservation.setConsumer(consumer);
-
-
-        if (reservation != null) {
-            Reservation updated = reservationRepository.save(reservation);
-            return convertToReservationDto(updated);
+        User currentUser = userService.getAuthUser();
+        Set<Role> userRoles = currentUser.getRoles();
+        String userRole = "";
+        for(Role role: userRoles){
+            userRole = role.getName();
         }
-        return null;
+
+        if(userRole.equals("STUDENT") && currentUser.getId() != reservation.getConsumer().getId())
+            throw new Exception("Access Denied!");
+
+        if(userRole.equals("STUDENT") && !reservation.getStatus().equals(Status.CANCELED))
+            throw new Exception("Student can not change reservation status to '"+ reservation.getStatus() + "'!" );
+
+        if(userRole.equals("CHECKER") && reservation.getStatus().equals(Status.CANCELED))
+            throw new Exception("TM Checker can not CANCEL reservation!");
+
+        if(reservation==null) throw new Exception("Reservation not found!");
+
+        Reservation updated = reservationRepository.save(reservation);
+        ReservationDto updateDto = convertToReservationDto(updated);
+        AppointmentDto appointmentDto = modelMapper.map(appointmentRepository.getOne(updated.getAppointment().getId()), AppointmentDto.class);
+        updateDto.setAppointmentDto(appointmentDto);
+        return updateDto;
     }
 
     @Override
@@ -100,7 +110,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
         List<ReservationDto> ret = new ArrayList<>();
         for (int i = 0; i < r.size(); i++)
-            if (r.get(i).getConsumer().getId() == userStudent.getId())
+            if (r.get(i).getConsumerDto().getId() == userStudent.getId())
                 ret.add(r.get(i));
         return ret;
     }
