@@ -21,12 +21,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
+import org.springframework.security.test.context.support.WithMockUser;
+
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,6 +100,7 @@ class AppointmentServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     void createAppointment_AppointmentEntity_ThenReturnSavedAppointment() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -118,6 +121,7 @@ class AppointmentServiceTest {
 
 
     @Test
+    @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     void updateAppointmentById_AppointmentEntity_ReturnUpdated() throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);

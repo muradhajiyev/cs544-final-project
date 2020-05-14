@@ -81,23 +81,6 @@ class AppointmentRepositoryTest {
     }
 
     @Test
-    public void whenFindById_Valid_thenReturnUpdatedAppointment(){
-        //given
-        User user = new User("TM Checker", "TM Checker", "checker@gmail.com", "checker", "123456");
-        Appointment appointment = new Appointment();
-        appointment.setDateTime(LocalDateTime.now());
-        appointment.setLocation("McLaughlin");
-        appointment.setProvider(user);
-        entityManager.persist(user);
-        entityManager.persist(appointment);
-        entityManager.flush();
-        // when
-        Optional<Appointment> found = appointmentRepository.findById(appointment.getId());
-         appointmentRepository.deleteById(found.get().getId());
-        // then
-        assertEquals(appointment.getId(), found.get().getId());
-    }
-
     public void findAppointmentReservationsStatus_Status_theReturnAppointmentList() throws Exception{
         // when
         Pageable page = PageRequest.of(0,20);

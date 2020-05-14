@@ -95,15 +95,15 @@ public class AppointmentController {
     }
 
 
-    @PutMapping("/update/{appointmentId}")
+    @PutMapping("/{id}")
     @ApiOperation(value="Update an appointment by id", response=AppointmentResponseModel.class)
-    public ResponseEntity<AppointmentResponseModel> updateAppointment(@PathVariable Long appointmentId, @Valid @RequestBody AppointmentRequestModel model) throws Exception {
+    public ResponseEntity<AppointmentResponseModel> updateAppointment(@PathVariable Long id, @Valid @RequestBody AppointmentRequestModel model) throws Exception {
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         AppointmentDto appointmentDto = mapper.map(model, AppointmentDto.class);
 
-        Appointment appointment = appointmentService.updateAppointmentById(appointmentId, appointmentDto);
+        Appointment appointment = appointmentService.updateAppointmentById(id, appointmentDto);
         AppointmentResponseModel response = mapper.map(appointment, AppointmentResponseModel.class);
 
         return new ResponseEntity(response, HttpStatus.OK);
