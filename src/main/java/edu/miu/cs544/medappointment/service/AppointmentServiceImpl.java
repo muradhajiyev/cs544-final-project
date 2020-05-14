@@ -36,9 +36,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserService userService;
 
     @Override
