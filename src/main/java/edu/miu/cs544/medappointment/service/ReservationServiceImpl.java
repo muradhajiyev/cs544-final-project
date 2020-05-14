@@ -65,16 +65,13 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationDto changeReservationStatus(String status, Long id) throws Exception {
+    public ReservationDto changeReservationStatus(Status status, Long id) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = reservationRepository.findById(id).orElse(null);
         if(reservation==null) throw new Exception("Reservation not found!");
         //reservation.setStatus(reservationDto.getStatus());
-        if(status.equals("CANCELED")) reservation.setStatus(Status.CANCELED);
-        else if(status.equals("ACCEPTED")) reservation.setStatus(Status.ACCEPTED);
-        else if(status.equals("DECLINED")) reservation.setStatus(Status.DECLINED);
-        else if(status.equals("PENDING")) reservation.setStatus(Status.PENDING);
+        reservation.setStatus(status);
 
         User currentUser = userService.getAuthUser();
         List<String> roles = currentUser.getRoles().stream().map(Role::getName).collect(Collectors.toList());

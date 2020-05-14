@@ -3,6 +3,7 @@ package edu.miu.cs544.medappointment.ui.controller.api.v1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Reservation;
+import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.service.AppointmentService;
 import edu.miu.cs544.medappointment.service.MyUserDetailsService;
 import edu.miu.cs544.medappointment.service.ReservationService;
@@ -59,7 +60,7 @@ public class ReservationController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ReservationResponseModel> changeStatus(@PathVariable(value = "id") Long id, @Valid @RequestBody String status) throws Exception {
+	public ResponseEntity<ReservationResponseModel> changeStatus(@PathVariable(value = "id") Long id, @RequestBody Status status) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		//ReservationDto reservationDto = mapper.map(model, ReservationDto.class);

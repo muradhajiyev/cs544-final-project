@@ -114,7 +114,7 @@ public class ReservationControllerTest {
         //return appointmentRepository.getOne(1L);
     }
 
-    /* @Test
+    @Test
     @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     public void changeReservationStatus_ValidInput_ThenReturnReservationResponseModel() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -122,7 +122,8 @@ public class ReservationControllerTest {
         //requestModel.setStatus(Status.CANCELED);
         requestModel.setAppointmentId(1L);
         //String jsonContent = mapper.writeValueAsString(requestModel);
-        String jsonContent = mapper.writeValueAsString(Status.CANCELED);
+//        String jsonContent = mapper.writeValueAsString(Status.CANCELED);
+        String jsonContent = "{\"status\":\"CANCELED\"}";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/api/v1/reservations/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +135,7 @@ public class ReservationControllerTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status", is("CANCELED")))
         ;
-    }*/
+    }
 
 
     @Test
