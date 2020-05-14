@@ -105,4 +105,18 @@ public class ReservationController {
 		ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
 		return new ResponseEntity(updatedResult, HttpStatus.OK);
 	}
+
+	@ApiOperation(value="Get Reservation Detail for the current user", response= ReservationResponseModel.class)
+	@GetMapping("/{id}")
+	public ResponseEntity<ReservationResponseModel> getReservation(@PathVariable Long id) throws Exception {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		ReservationDto reservationDetail = reservationService.getReservation(id);
+
+		ReservationResponseModel response = mapper.map(reservationDetail, ReservationResponseModel.class);
+		//AppointmentResponseModel appointment = mapper.map(reservationDetail.getAppointmentDto(), AppointmentResponseModel.class);
+		//response.setAppointment(appointment);
+
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
 }

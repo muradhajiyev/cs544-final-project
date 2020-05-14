@@ -106,12 +106,20 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationDto> viewUserReservations() {
+        /*ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);*/
+
         User userStudent = userService.getAuthUser();
         List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
         List<ReservationDto> ret = new ArrayList<>();
-        for (int i = 0; i < r.size(); i++)
-            if (r.get(i).getConsumer().getId() == userStudent.getId())
+        for (int i = 0; i < r.size(); i++) {
+            Reservation res = reservationRepository.findById(r.get(i).getId()).orElse(null);
+            if (res!=null && res.getConsumer().getId() == userStudent.getId()) {
+                /*r.get(i).setConsumerDto(modelMapper.map(res.getConsumer(), UserDto.class));
+                r.get(i).setAppointmentDto(modelMapper.map(res.getAppointment(), AppointmentDto.class));*/
                 ret.add(r.get(i));
+            }
+        }
         return ret;
     }
 
@@ -160,6 +168,18 @@ public class ReservationServiceImpl implements ReservationService {
 
         return reservations.stream().map(entity -> modelMapper.map(entity, ReservationDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ReservationDto getReservation(Long id) throws Exception {
+        User currentUser = userService.getAuthUser();
+        Reservation reservation = reservationRepository.findById(id).orElse(null);
+        if(reservation==null) throw new Exception("Reservation not found!");
+
+        if(reservation.getConsumer().getId()!=currentUser.getId())
+            throw new Exception("Access Denied!");
+
+        return convertToReservationDto(reservation);
     }
 
 }
