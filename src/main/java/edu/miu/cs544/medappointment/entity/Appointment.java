@@ -3,11 +3,12 @@ package edu.miu.cs544.medappointment.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-public class Appointment {
+public class Appointment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +22,9 @@ public class Appointment {
 
     @ManyToOne()
     @JoinColumn(name="provider", nullable = false)
+    @JsonIgnore
     private User provider;
-    
+
     @OneToMany(mappedBy = "appointment")
 	private List<Reservation> reservations;
 
@@ -74,11 +76,11 @@ public class Appointment {
 	public void setReservation(List<Reservation> reservation) {
 		this.reservations = reservation;
 	}
-	
+
 	public boolean addReservation(Reservation reservation) {
 		return reservations.add(reservation);
 	}
-	
+
 	public boolean removeReservationLine(Reservation reservation) {
 		return reservations.remove(reservation);
 	}

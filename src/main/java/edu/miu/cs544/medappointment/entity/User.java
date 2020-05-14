@@ -1,5 +1,6 @@
 package edu.miu.cs544.medappointment.entity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -7,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 
 @Entity
-public class User {
+public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
