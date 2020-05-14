@@ -62,19 +62,9 @@ public class AppointmentController {
     {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		AppointmentDto appointment;
-		AppointmentResponseModel response;
-		try 
-		{
-			appointment = appointmentService.getById(id);
-			response = mapper.map(appointment, AppointmentResponseModel.class);
-		}
-		catch(Exception e)
-		{//No appointment with given id
-			response = null;
-			e.printStackTrace();
-		}
-		return new ResponseEntity(response, HttpStatus.CREATED);
+        AppointmentDto appointment = appointmentService.getById(id);
+        AppointmentResponseModel response = mapper.map(appointment, AppointmentResponseModel.class);
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
     @GetMapping
@@ -113,6 +103,13 @@ public class AppointmentController {
     }
 
 
+    @DeleteMapping("/{id}")
+    @ApiOperation(value="Delete an appointment by id")
+    public ResponseEntity deleteAppointment(@PathVariable long id){
+        appointmentService.deleteAppointment(id);
+        return ResponseEntity.ok().build();
+    }
+
     private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
         if(appointment == null)
             return null;
@@ -123,10 +120,4 @@ public class AppointmentController {
         return appointmentResponseModel;
     }
 
-    @DeleteMapping("/{appointmentId}")
-    public void deleteAppointment(@PathVariable long appointmentId){
-//        reservationRepository.deleteAllByAppointment_Id(appointmentId);
-        appointmentService.deleteAppointment(appointmentId);
-
-    }
 }

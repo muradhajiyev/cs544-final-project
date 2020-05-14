@@ -55,6 +55,7 @@ public class ReservationController {
 	}
 
 	@PutMapping("/{id}")
+	@ApiOperation(value="Change the reservation status", response= ReservationResponseModel.class)
 	public ResponseEntity<ReservationResponseModel> changeReservationStatus(@PathVariable(value = "id") Long id, @Valid @RequestBody ReservationRequestModel model) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -90,14 +91,17 @@ public class ReservationController {
 		}
 		
 	}
-	@PutMapping(value = "/{id}/cancel")
-	public ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long id) throws Exception {
-		ReservationDto reservation = reservationService.cancelReservation(id);
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
-		return new ResponseEntity(updatedResult, HttpStatus.OK);
-	}
+
+//	@PutMapping(value = "/{id}/cancel")
+//	@ApiOperation(value="Cancel the reservation", response= ReservationResponseModel.class)
+//	public ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long id) throws Exception {
+//		ReservationDto reservation = reservationService.cancelReservation(id);
+//		ModelMapper mapper = new ModelMapper();
+//		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//		ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
+//		return new ResponseEntity(updatedResult, HttpStatus.OK);
+//	}
+
 	@ApiOperation(value="Get Reservation Detail for the current user", response= ReservationResponseModel.class)
 	@GetMapping("/{id}")
 	public ResponseEntity<ReservationResponseModel> getReservation(@PathVariable Long id) throws Exception {
