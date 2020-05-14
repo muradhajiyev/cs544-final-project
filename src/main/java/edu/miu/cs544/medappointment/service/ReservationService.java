@@ -18,4 +18,6 @@ public interface ReservationService {
 	ReservationDto convertToReservationDto(Reservation reservation);
 	List<ReservationDto> viewUserReservations();
 	List<ReservationDto> convertToListReservationDto(List<Reservation> resList);
+	ReservationDto getReservation(Long id) throws Exception;
+	boolean checkHasAcceptedReservations(Long appointmentId);
 }

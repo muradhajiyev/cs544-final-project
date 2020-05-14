@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import edu.miu.cs544.medappointment.entity.Reservation;
 
+import java.util.List;
+
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -16,4 +18,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     void deleteAllByAppointment_Id(@Param("appointmentId") Long appointmentId);
 
     Page<Reservation> findByAppointmentId(Long appointmentId, Pageable pageable);
+
+    @Query("SELECT r FROM Reservation r WHERE r.status = 'ACCEPTED' and r.appointment.id = ?1")
+    List<Reservation> findAllByAppointmentId(Long appId);
 }
