@@ -11,6 +11,8 @@ import edu.miu.cs544.medappointment.shared.UserDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -102,46 +104,21 @@ public class ReservationServiceImpl implements ReservationService {
         return updateDto;
     }
 
-    @Override
-    public ReservationDto convertToReservationDto(Reservation reservation) {
-        if (reservation != null) {
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            ReservationDto reservationDto = modelMapper.map(reservation, ReservationDto.class);
-            return reservationDto;
-        } else {
-            return null;
-        }
-    }
 
     @Override
-    public List<ReservationDto> viewUserReservations() {
-        /*ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);*/
-
+    public Page<ReservationDto> getUserReservations(Pageable pageable) {
         User userStudent = userService.getAuthUser();
-        List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
-        List<ReservationDto> ret = new ArrayList<>();
-        for (int i = 0; i < r.size(); i++) {
-            Reservation res = reservationRepository.findById(r.get(i).getId()).orElse(null);
-            if (res!=null && res.getConsumer().getId() == userStudent.getId()) {
-                /*r.get(i).setConsumerDto(modelMapper.map(res.getConsumer(), UserDto.class));
-                r.get(i).setAppointmentDto(modelMapper.map(res.getAppointment(), AppointmentDto.class));*/
-                ret.add(r.get(i));
-            }
-        }
-        return ret;
+        Page<ReservationDto> reservations = reservationRepository.findByConsumerId(userStudent.getId(), pageable).map(r -> convertToReservationDto(r));
+        return reservations;
     }
 
-    @Override
-    public List<ReservationDto> convertToListReservationDto(List<Reservation> resList) {
-        if (resList == null)
+    public ReservationDto convertToReservationDto(Reservation reservation) {
+        if (reservation == null)
             return null;
 
         ModelMapper modelMapper = new ModelMapper();
-        return resList.stream()
-                .map(entity -> modelMapper.map(entity, ReservationDto.class))
-                .collect(Collectors.toList());
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return modelMapper.map(reservation, ReservationDto.class);
     }
 
     @Override

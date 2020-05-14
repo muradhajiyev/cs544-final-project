@@ -67,7 +67,7 @@ public class AppointmentController {
 
     @GetMapping
     @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
-    public ResponseEntity<Page<AppointmentResponseModel>> getAll(Pageable page, @ApiParam(name =  "status", type = "String", required = false) @RequestParam Optional<Status> status){
+    public ResponseEntity<Page<AppointmentResponseModel>> getAllAppointments(Pageable page, @ApiParam(name =  "status", type = "String", required = false) @RequestParam Optional<Status> status){
         Page<AppointmentResponseModel> result=new PageImpl<AppointmentResponseModel>(appointmentService.getAll(page,status)
                 .getContent().stream()
                 .map(appointment -> convertToAppointmentResponseModel(appointment))
@@ -93,7 +93,6 @@ public class AppointmentController {
 
         Appointment appointment = appointmentService.updateAppointmentById(id, appointmentDto);
         AppointmentResponseModel response = mapper.map(appointment, AppointmentResponseModel.class);
-
         return new ResponseEntity(response, HttpStatus.OK);
     }
 

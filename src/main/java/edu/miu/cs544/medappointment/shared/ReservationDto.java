@@ -1,8 +1,7 @@
 package edu.miu.cs544.medappointment.shared;
 
-import edu.miu.cs544.medappointment.entity.Appointment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.miu.cs544.medappointment.entity.Status;
-import edu.miu.cs544.medappointment.entity.User;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +11,9 @@ public class ReservationDto implements Serializable {
     private Date createdAt;
     private Date updatedAt;
     private Status status;
+    @JsonIgnore
     private UserDto consumer;
+    @JsonIgnore
     private AppointmentDto appointment;
 
     public ReservationDto() {

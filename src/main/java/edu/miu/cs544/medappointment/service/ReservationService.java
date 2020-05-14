@@ -7,6 +7,8 @@ import edu.miu.cs544.medappointment.shared.ReservationDto;
 
 
 import edu.miu.cs544.medappointment.entity.Reservation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ReservationService {
     ReservationDto cancelReservation(Long id) throws Exception;
@@ -15,9 +17,7 @@ public interface ReservationService {
 	ReservationDto createReservation(ReservationDto reservation) throws Exception;
 	ReservationDto getReservationById(Long id);
 	ReservationDto changeReservationStatus(ReservationDto reservationDto, Long id) throws Exception;
-	ReservationDto convertToReservationDto(Reservation reservation);
-	List<ReservationDto> viewUserReservations();
-	List<ReservationDto> convertToListReservationDto(List<Reservation> resList);
+	Page<ReservationDto> getUserReservations(Pageable pageable);
 	ReservationDto getReservation(Long id) throws Exception;
 	boolean checkHasAcceptedReservations(Long appointmentId);
 }

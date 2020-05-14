@@ -21,4 +21,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT r FROM Reservation r WHERE r.status = 'ACCEPTED' and r.appointment.id = ?1")
     List<Reservation> findAllByAppointmentId(Long appId);
+
+    Page<Reservation> findByConsumerId(Long consumerId, Pageable pageable);
 }
