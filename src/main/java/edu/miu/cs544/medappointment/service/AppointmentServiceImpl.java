@@ -61,6 +61,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public Page<AppointmentDto> getAllAvailable(Pageable page) {
+        return appointmentRepository.findAllAvailable(page).map(appointment -> convertToAppointmentDto(appointment));
+    }
+
+    @Override
     public AppointmentDto getById(Long id) {
         return convertToAppointmentDto(appointmentRepository.findById(id).get());
     }

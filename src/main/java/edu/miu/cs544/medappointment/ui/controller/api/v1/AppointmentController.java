@@ -84,6 +84,13 @@ public class AppointmentController {
         return new ResponseEntity(result,HttpStatus.OK);
     }
 
+    @GetMapping("/available")
+    @ApiOperation(value="Get All Available Appointments", response=AppointmentResponseModel.class, responseContainer = "List")
+    public ResponseEntity<Page<AppointmentResponseModel>> getAllAvailable(Pageable page){
+        Page<AppointmentResponseModel> result=appointmentService.getAllAvailable(page).map(appointment -> convertToAppointmentResponseModel(appointment));
+        return new ResponseEntity(result,HttpStatus.OK);
+    }
+
 
     @GetMapping("/{id}/reservations")
     public ResponseEntity<Page> getAppointmentReservations(Pageable page, @PathVariable("id") Long appointmentId){
