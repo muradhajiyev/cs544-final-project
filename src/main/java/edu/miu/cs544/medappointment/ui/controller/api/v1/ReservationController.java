@@ -41,7 +41,7 @@ public class ReservationController {
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STUDENT')")
 	@ApiOperation(value="Create a new reservation in the database", response= ReservationResponseModel.class)
 	@PostMapping
-	public ResponseEntity<ReservationResponseModel> createReservation(@Valid @RequestBody Long appointmentId) throws Exception {
+	public ResponseEntity<ReservationResponseModel> createReservation(@Valid @RequestParam("appointmentId") Long appointmentId) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		//ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
@@ -60,7 +60,7 @@ public class ReservationController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ReservationResponseModel> changeStatus(@PathVariable(value = "id") Long id, @RequestBody Status status) throws Exception {
+	public ResponseEntity<ReservationResponseModel> changeStatus(@PathVariable(value = "id") Long id, @RequestParam("status") Status status) throws Exception {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		//ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
