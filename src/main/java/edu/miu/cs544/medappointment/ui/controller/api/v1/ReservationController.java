@@ -97,7 +97,7 @@ public class ReservationController {
 		}
 		
 	}
-	@PutMapping(value = "/cancel/{id}")
+	@PutMapping(value = "/{id}/cancel")
 	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long id) throws Exception {
 		ReservationDto reservation = reservationService.cancelReservation(id);
 		ModelMapper mapper = new ModelMapper();

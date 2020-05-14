@@ -11,8 +11,8 @@ public class ReservationDto {
     private Date createdAt;
     private Date updatedAt;
     private Status status;
-    private UserDto consumerDto;
-    private AppointmentDto appointmentDto;
+    private UserDto consumer;
+    private AppointmentDto appointment;
 
     public ReservationDto() {
     }
@@ -42,19 +42,19 @@ public class ReservationDto {
     }
 
     public UserDto getConsumerDto() {
-        return consumerDto;
+        return consumer;
     }
 
-    public void setConsumerDto(UserDto consumerDto) {
-        this.consumerDto = consumerDto;
+    public void setConsumerDto(UserDto consumer) {
+        this.consumer = consumer;
     }
 
     public AppointmentDto getAppointmentDto() {
-        return appointmentDto;
+        return appointment;
     }
 
-    public void setAppointmentDto(AppointmentDto appointmentDto) {
-        this.appointmentDto = appointmentDto;
+    public void setAppointmentDto(AppointmentDto appointment) {
+        this.appointment = appointment;
     }
 
     public Long getId() {
