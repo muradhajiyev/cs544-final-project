@@ -1,9 +1,10 @@
 package edu.miu.cs544.medappointment.shared;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-public class UserDto {
+public class UserDto implements Serializable {
     private Long id;
     private String firstName;
     private String lastName;

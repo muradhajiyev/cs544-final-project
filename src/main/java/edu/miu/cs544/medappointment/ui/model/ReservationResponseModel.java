@@ -1,10 +1,6 @@
 package edu.miu.cs544.medappointment.ui.model;
 
-
-
-import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Status;
-import edu.miu.cs544.medappointment.entity.User;
 
 import java.util.Date;
 
@@ -62,5 +58,9 @@ public class ReservationResponseModel {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -1,10 +1,14 @@
 package edu.miu.cs544.medappointment.service;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
+import edu.miu.cs544.medappointment.entity.Reservation;
+import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
+import edu.miu.cs544.medappointment.repository.ReservationRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
+import edu.miu.cs544.medappointment.shared.ReservationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,14 +37,22 @@ class AppointmentServiceTest {
 
     private User user;
     private Appointment appointment;
+    private Reservation reservation;
     private List<Appointment> appointments;
     private Page<Appointment> appointmentsPage;
 
     @InjectMocks
     private AppointmentService appointmentService = new AppointmentServiceImpl();
 
+    @InjectMocks
+    private ReservationService reservationService = new ReservationServiceImpl();
+
     @Mock
     private AppointmentRepository appointmentRepository;
+
+    @Mock
+    private ReservationRepository reservationRepository;
+
 
     // TODO. temporary till implement Security
     @Mock
@@ -90,7 +102,7 @@ class AppointmentServiceTest {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
-        Appointment created = appointmentService.createAppointment(appointmentDto);
+        AppointmentDto created = appointmentService.createAppointment(appointmentDto);
         assertEquals(user.getEmail(), created.getProvider().getEmail());
         assertEquals(created.getLocation(), created.getLocation());
     }
@@ -98,16 +110,12 @@ class AppointmentServiceTest {
     @Test
     void getAppointmentById_Id_ThenReturnAppointment() throws Exception 
     {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
-
-
         AppointmentDto returned = appointmentService.getById(1L);
 
         assertEquals(returned.getProvider().getEmail(), appointment.getProvider().getEmail());
         assertEquals(returned.getDateTime(), appointment.getDateTime());
     }
+
 
     @Test
     void updateAppointmentById_AppointmentEntity_ReturnUpdated() throws Exception {
@@ -115,8 +123,7 @@ class AppointmentServiceTest {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
 
-        Appointment created = appointmentService.createAppointment(appointmentDto);
-
+        AppointmentDto created = appointmentService.createAppointment(appointmentDto);
         AppointmentDto appointmentDto2 = modelMapper.map(created, AppointmentDto.class);
         created.setDateTime(created.getDateTime().plusMinutes(5));
         created.setLocation("Hi Rise");

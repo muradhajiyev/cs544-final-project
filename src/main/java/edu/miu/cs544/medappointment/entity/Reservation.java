@@ -1,7 +1,10 @@
 package edu.miu.cs544.medappointment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,7 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Reservation {
+public class Reservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +36,12 @@ public class Reservation {
     
     @ManyToOne
     @JoinColumn(name="consumer", nullable = false)
+	@JsonIgnore
     private User consumer;
     
     @ManyToOne
     @JoinColumn(name="appointment_id", nullable = false)
+	@JsonIgnore
     private Appointment appointment;
 
 	public Reservation() {

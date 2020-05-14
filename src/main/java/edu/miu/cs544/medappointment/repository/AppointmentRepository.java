@@ -1,6 +1,7 @@
 package edu.miu.cs544.medappointment.repository;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
+import edu.miu.cs544.medappointment.entity.Reservation;
 import edu.miu.cs544.medappointment.entity.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,7 @@
 package edu.miu.cs544.medappointment.service;
 
 import edu.miu.cs544.medappointment.entity.Appointment;
+import edu.miu.cs544.medappointment.entity.Reservation;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
 import edu.miu.cs544.medappointment.repository.AppointmentRepository;
@@ -8,6 +9,7 @@ import edu.miu.cs544.medappointment.repository.ReservationRepository;
 import edu.miu.cs544.medappointment.repository.UserRepository;
 import edu.miu.cs544.medappointment.shared.AppointmentDto;
 
+import edu.miu.cs544.medappointment.shared.ReservationDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +30,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
-    private UserRepository userRepository;
- @Autowired
     private ReservationRepository reservationRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
-    public Appointment createAppointment(AppointmentDto appointmentDto) {
-        ModelMapper modelMapper=new ModelMapper();
+    public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
+        ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Appointment appointment = modelMapper.map(appointmentDto, Appointment.class);
 
@@ -45,17 +48,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointment.setProvider(user);
         Appointment result = appointmentRepository.save(appointment);
-        return result;
+        return modelMapper.map(result, AppointmentDto.class);
     }
 
     @Override
     public Page<AppointmentDto> getAll(Pageable page, Optional<Status> status) {
-        //first get list from the page result, then do mapping and return convert the mapped list to page
-//        Page<AppointmentDto> entities = appointmentRepository.findAll(page).map(appointment -> convertToAppointmentDto(appointment));
-        if(!status.isPresent())
+        if (!status.isPresent())
             return appointmentRepository.findAll(page).map(appointment -> convertToAppointmentDto(appointment));
         else
-            return appointmentRepository.findDistinctByReservationsStatus(status.get(),page).map(appointment -> convertToAppointmentDto(appointment));
+            return appointmentRepository.findDistinctByReservationsStatus(status.get(), page).map(appointment -> convertToAppointmentDto(appointment));
     }
 
     @Override
@@ -63,17 +64,33 @@ public class AppointmentServiceImpl implements AppointmentService {
         return convertToAppointmentDto(appointmentRepository.findById(id).get());
     }
 
+    @Override
+    public Page<ReservationDto> getAppointmentReservations(long id, Pageable page) {
+        Page<Reservation> reservations = reservationRepository.findByAppointmentId(id, page);
+        return reservations.map(reservation -> convertToReservationDto(reservation));
+    }
+
 
     private AppointmentDto convertToAppointmentDto(Appointment appointment) {
-        if(appointment!=null) {
-            ModelMapper modelMapper = new ModelMapper();
-            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
-            return appointmentDto;
-        }else{
+        if (appointment == null)
             return null;
-        }
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        AppointmentDto appointmentDto = modelMapper.map(appointment, AppointmentDto.class);
+        return appointmentDto;
     }
+
+    private ReservationDto convertToReservationDto(Reservation reservation) {
+        if (reservation == null)
+            return null;
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        ReservationDto reservationDto = modelMapper.map(reservation, ReservationDto.class);
+        return reservationDto;
+    }
+
     @Override
     public Appointment updateAppointmentById(Long appointmentId, AppointmentDto newAppointment) throws Exception {
         ModelMapper modelMapper = new ModelMapper();
@@ -84,7 +101,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Optional<Appointment> oldAppointment = appointmentRepository.findById(appointmentId);
 
-        if(!oldAppointment.isPresent()){
+        if (!oldAppointment.isPresent()) {
             throw new Exception("No appointment found");
         }
 
