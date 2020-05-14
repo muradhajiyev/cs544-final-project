@@ -10,7 +10,7 @@ import edu.miu.cs544.medappointment.entity.Reservation;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-//    @Query("delete from Reservation where appointment.id =:appointmentId")
+    @Query("delete from Reservation where appointment.id =:appointmentId")
     void deleteAllByAppointment_Id(@Param("appointmentId") Long appointmentId);
 
 }

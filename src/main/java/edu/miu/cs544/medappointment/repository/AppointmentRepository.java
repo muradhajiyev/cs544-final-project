@@ -15,13 +15,10 @@ import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-<<<<<<< HEAD
-=======
 
     Page<Appointment> findDistinctByReservationsStatus(Status status, Pageable page);
 
     @Query("SELECT DISTINCT a FROM Appointment a LEFT OUTER JOIN a.reservations r WHERE r.status != 'ACCEPTED' OR r.id=null")
     Page<Appointment> findAll(Pageable page);
 
->>>>>>> f6859f8267101d463c56ab66e0ea072873171304
 }

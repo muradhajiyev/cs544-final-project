@@ -98,6 +98,7 @@ public class ReservationController {
 	}
 	@PutMapping(value = "/cancel/{reservationId}")
 	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long reservationId) throws Exception {
+		System.out.println(reservationId);
 		ReservationDto reservation = reservationService.cancelReservation(reservationId);
 		ReservationRequestModel model = new ReservationRequestModel();
 		ModelMapper mapper = new ModelMapper();
