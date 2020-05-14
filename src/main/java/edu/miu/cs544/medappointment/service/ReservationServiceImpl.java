@@ -38,7 +38,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
         reservation.setStatus(Status.PENDING);
 
-        Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
+        Appointment appointment = appointmentRepository.findById(reservationDto.getAppointment().getId()).orElse(null);
         if(appointment==null) throw new Exception("Appointment not found");
         reservation.setAppointment(appointment);
 
@@ -50,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation result = reservationRepository.save(reservation);
         ReservationDto createdDto = convertToReservationDto(result);
         UserDto consumerDto = modelMapper.map(userStudent, UserDto.class);
-        createdDto.setConsumerDto(consumerDto);
+        createdDto.setConsumer(consumerDto);
         return createdDto;
     }
 
@@ -88,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation updated = reservationRepository.save(reservation);
         ReservationDto updateDto = convertToReservationDto(updated);
         AppointmentDto appointmentDto = modelMapper.map(appointmentRepository.getOne(updated.getAppointment().getId()), AppointmentDto.class);
-        updateDto.setAppointmentDto(appointmentDto);
+        updateDto.setAppointment(appointmentDto);
         return updateDto;
     }
 
@@ -110,7 +110,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
         List<ReservationDto> ret = new ArrayList<>();
         for (int i = 0; i < r.size(); i++)
-            if (r.get(i).getConsumerDto().getId() == userStudent.getId())
+            if (r.get(i).getConsumer().getId() == userStudent.getId())
                 ret.add(r.get(i));
         return ret;
     }
