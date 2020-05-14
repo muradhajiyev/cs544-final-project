@@ -97,13 +97,13 @@ public class ReservationControllerTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status", is("PENDING")))
                 .andExpect(jsonPath("$.appointment.location", is("Verill Hall #35")))
-                .andExpect(jsonPath("$.appointment.provider.email", is("checker2@gmail.com")))
+                .andExpect(jsonPath("$.appointment.provider.email", is("tmchecker@gmail.com")))
                 .andExpect(jsonPath("$.consumer.email", is(userConsumer.getEmail())));
     }
 
     protected Appointment testAppointmentData(){
         //User userChecker = userRepository.getOne(2L);
-        User userChecker = new User("TM Checker", "TM Checker", "checker2@gmail.com", "checker2", "123456");
+        User userChecker = new User("TM Checker", "TM Checker", "tmchecker@gmail.com", "tmchecker", "123456");
         userChecker = userRepository.save(userChecker);
 
         Appointment appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35", userChecker);

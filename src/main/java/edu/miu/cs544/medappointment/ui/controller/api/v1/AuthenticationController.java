@@ -31,7 +31,7 @@ public class AuthenticationController {
     private JwtUtil jwtTokenUtil;
 
     @ApiOperation(value="Authenticate and gives a unique token", response= AuthenticationResponseModel.class)
-    @PostMapping("/authenticate")
+    @PostMapping("/authentication")
     public ResponseEntity<?> createAuthToken(@RequestBody AuthenticationRequestModel authenticationRequestModel) throws Exception{
 
         try{

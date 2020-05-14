@@ -46,19 +46,14 @@ class AppointmentServiceTest {
     @InjectMocks
     private AppointmentService appointmentService = new AppointmentServiceImpl();
 
-    @InjectMocks
-    private ReservationService reservationService = new ReservationServiceImpl();
-
     @Mock
     private AppointmentRepository appointmentRepository;
 
     @Mock
-    private ReservationRepository reservationRepository;
-
-
-    // TODO. temporary till implement Security
-    @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
@@ -79,6 +74,7 @@ class AppointmentServiceTest {
         updateAppointment.setProvider(appointment.getProvider());
 
         //mocking
+        when(userService.getAuthUser()).thenReturn(user);
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));

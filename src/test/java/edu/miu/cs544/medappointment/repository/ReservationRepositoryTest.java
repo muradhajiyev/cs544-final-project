@@ -58,11 +58,11 @@ class ReservationRepositoryTest {
         // then
         assertEquals(Status.DECLINED, updateReservation.getStatus());
     }
+
     @Test
     public void whenFindById_ValidId_thenReturnReservation(){
-        //TODO: replace userStudent by the Authenticated user (student)
         User userStudent = new User("Student fname", "Student lname", "student@miu.edu", "student","123456");
-        User userChecker = new User("TM Checker", "TM Checker", "checker2@gmail.com", "checker", "123456");
+        User userChecker = new User("TM Checker", "TM Checker", "tmchecker@gmail.com", "checker", "123456");
         Appointment appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35",userChecker);
         entityManager.persist(userStudent);
         entityManager.persist(userChecker);

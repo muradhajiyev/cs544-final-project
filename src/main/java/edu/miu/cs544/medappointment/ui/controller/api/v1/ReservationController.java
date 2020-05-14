@@ -11,6 +11,7 @@ import edu.miu.cs544.medappointment.shared.ReservationDto;
 import edu.miu.cs544.medappointment.ui.model.AppointmentResponseModel;
 import edu.miu.cs544.medappointment.ui.model.ReservationRequestModel;
 import edu.miu.cs544.medappointment.ui.model.ReservationResponseModel;
+import edu.miu.cs544.medappointment.ui.model.UserResponseModel;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -35,6 +36,9 @@ public class ReservationController {
 	@Autowired
 	private AppointmentService appointmentService;
 
+	@Autowired
+	private UserService userService;
+
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STUDENT')")
 	@ApiOperation(value="Create a new reservation in the database", response= ReservationResponseModel.class)
 	@PostMapping
@@ -42,12 +46,14 @@ public class ReservationController {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
-		reservationDto.setAppointmentDto(appointmentService.getById(model.getAppointmentId()));
+		reservationDto.setAppointment(appointmentService.getById(model.getAppointmentId()));
 		ReservationDto reservation = reservationService.createReservation(reservationDto);
 
 		ReservationResponseModel response = mapper.map(reservation, ReservationResponseModel.class);
-		AppointmentResponseModel appointment = mapper.map(reservationDto.getAppointmentDto(), AppointmentResponseModel.class);
+		AppointmentResponseModel appointment = mapper.map(reservationDto.getAppointment(), AppointmentResponseModel.class);
 		response.setAppointment(appointment);
+		UserResponseModel consumer = mapper.map(reservation.getConsumer(), UserResponseModel.class);
+		response.setConsumer(consumer);
 
 		return new ResponseEntity(response, HttpStatus.CREATED);
 	}
@@ -57,22 +63,17 @@ public class ReservationController {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
-		/*System.out.println("IN SERVICE:::::::::::::");
-		System.out.println(appointmentService.getById(model.getAppointmentId()));*/
-		reservationDto.setAppointmentDto(appointmentService.getById(model.getAppointmentId()));
-		//System.out.println(reservationDto.getAppointmentDto().getId());
-
 		ReservationDto updated = reservationService.changeStatus(reservationDto, id);
 
 		ReservationResponseModel response = mapper.map(updated, ReservationResponseModel.class);
-		AppointmentResponseModel appointment = mapper.map(reservationDto.getAppointmentDto(), AppointmentResponseModel.class);
-		response.setAppointment(appointment);
+		//AppointmentResponseModel appointment = mapper.map(updated.getAppointmentDto(), AppointmentResponseModel.class);
+		//response.setAppointment(appointment);
 
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value="Get Reservations for the current user", response= ReservationResponseModel.class)
-	@GetMapping()
+	@GetMapping
 	public ResponseEntity<List<ReservationResponseModel>> getUserReservations()
 	{
 
@@ -96,17 +97,25 @@ public class ReservationController {
 		}
 		
 	}
-	@ApiOperation(value="Change the status to CANCEL in the database", response= ReservationResponseModel.class)
-	@PutMapping(value = "/cancel/{reservationId}")
-	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long reservationId) throws Exception {
-
-		ReservationDto reservation = reservationService.cancelReservation(reservationId);
-		ReservationRequestModel model = new ReservationRequestModel();
+	@PutMapping(value = "/{id}/cancel")
+	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long id) throws Exception {
+		ReservationDto reservation = reservationService.cancelReservation(id);
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
 		ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
 		return new ResponseEntity(updatedResult, HttpStatus.OK);
 	}
+	@ApiOperation(value="Get Reservation Detail for the current user", response= ReservationResponseModel.class)
+	@GetMapping("/{id}")
+	public ResponseEntity<ReservationResponseModel> getReservation(@PathVariable Long id) throws Exception {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		ReservationDto reservationDetail = reservationService.getReservation(id);
 
+		ReservationResponseModel response = mapper.map(reservationDetail, ReservationResponseModel.class);
+		//AppointmentResponseModel appointment = mapper.map(reservationDetail.getAppointmentDto(), AppointmentResponseModel.class);
+		//response.setAppointment(appointment);
+
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
 }

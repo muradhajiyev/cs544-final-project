@@ -1,6 +1,5 @@
 package edu.miu.cs544.medappointment.shared;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
@@ -9,20 +8,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ReservationDto implements Serializable {
-    private Long id;
+    private long id;
     private Date createdAt;
     private Date updatedAt;
     private Status status;
-    @JsonIgnore
     private UserDto consumer;
-    @JsonIgnore
-    private AppointmentDto appointmentDto;
+    private AppointmentDto appointment;
 
     public ReservationDto() {
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Date getCreatedAt() {
@@ -57,16 +50,17 @@ public class ReservationDto implements Serializable {
         this.consumer = consumer;
     }
 
-    public AppointmentDto getAppointmentDto() {
-        return appointmentDto;
+    public AppointmentDto getAppointment() {
+        return appointment;
     }
 
-    public void setAppointmentDto(AppointmentDto appointmentDto) {
-        this.appointmentDto = appointmentDto;
+    public void setAppointment(AppointmentDto appointment) {
+        this.appointment = appointment;
     }
-
 
     public Long getId() {
         return id;
     }
+
+    public void setId(Long id){ this.id = id; }
 }

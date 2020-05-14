@@ -124,5 +124,6 @@ public class AppointmentController {
     public void deleteAppointment(@PathVariable long appointmentId){
 //        reservationRepository.deleteAllByAppointment_Id(appointmentId);
         appointmentService.deleteAppointment(appointmentId);
+
     }
 }
