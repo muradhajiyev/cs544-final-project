@@ -8,6 +8,5 @@ import org.junit.runner.RunWith;
 @SelectPackages("edu.miu.cs544.medappointment")
 class MedAppointmentApplicationTests {
 
-
 }
 
