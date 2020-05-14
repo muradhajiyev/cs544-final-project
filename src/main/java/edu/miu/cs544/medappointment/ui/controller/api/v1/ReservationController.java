@@ -59,14 +59,13 @@ public class ReservationController {
 		return new ResponseEntity(response, HttpStatus.CREATED);
 	}
 	@PutMapping(value = "/cancel/{reservationId}")
-	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long reservationId, @Valid @RequestBody ReservationRequestModel model) throws Exception {
+	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long reservationId) throws Exception {
 		ReservationDto reservation = reservationService.cancelReservation(reservationId);
+		ReservationRequestModel model = new ReservationRequestModel();
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
-
 		ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
-
 		return new ResponseEntity(updatedResult, HttpStatus.OK);
 	}
 }

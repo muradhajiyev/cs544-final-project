@@ -109,6 +109,6 @@ class ReservationServiceTest {
 
         assertEquals(Status.CANCELED, changed.getStatus());
     }
-    
+
 
 }

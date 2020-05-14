@@ -1,6 +1,8 @@
 package edu.miu.cs544.medappointment.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import edu.miu.cs544.medappointment.entity.Reservation;
@@ -8,5 +10,7 @@ import edu.miu.cs544.medappointment.entity.Reservation;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    void deleteAllByAppointment_Id(Long appointment_id);
+//    @Query("delete from Reservation where appointment.id =:appointmentId")
+    void deleteAllByAppointment_Id(@Param("appointmentId") Long appointmentId);
+
 }
