@@ -25,7 +25,7 @@ public class Appointment implements Serializable {
     @JsonIgnore
     private User provider;
 
-    @OneToMany(mappedBy = "appointment")
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.REMOVE)
 	private List<Reservation> reservations;
 
     public Appointment(){ }

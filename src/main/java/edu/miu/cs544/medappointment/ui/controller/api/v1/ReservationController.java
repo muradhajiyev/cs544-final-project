@@ -76,10 +76,10 @@ public class ReservationController {
 	@GetMapping
 	public ResponseEntity<List<ReservationResponseModel>> getUserReservations()
 	{
-		
+
 		List<ReservationResponseModel> response = convertToListReservationResponse(
 													reservationService.viewUserReservations());
-		
+
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
@@ -105,7 +105,6 @@ public class ReservationController {
 		ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
 		return new ResponseEntity(updatedResult, HttpStatus.OK);
 	}
-
 	@ApiOperation(value="Get Reservation Detail for the current user", response= ReservationResponseModel.class)
 	@GetMapping("/{id}")
 	public ResponseEntity<ReservationResponseModel> getReservation(@PathVariable Long id) throws Exception {
