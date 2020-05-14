@@ -39,8 +39,6 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
-    @Autowired
-    private ReservationRepository reservationRepository;
 
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('CHECKER')")
     @PostMapping
