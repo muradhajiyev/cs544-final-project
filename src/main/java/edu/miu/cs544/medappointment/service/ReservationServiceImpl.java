@@ -40,6 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Appointment appointment = appointmentRepository.findById(reservationDto.getAppointment().getId()).orElse(null);
         if(appointment==null) throw new Exception("Appointment not found");
+        if(checkHasAcceptedReservations(appointment.getId())) throw new Exception("This appointment is not available");
         reservation.setAppointment(appointment);
 
         // Getting user from Authentication manager.
@@ -180,6 +181,12 @@ public class ReservationServiceImpl implements ReservationService {
             throw new Exception("Access Denied!");
 
         return convertToReservationDto(reservation);
+    }
+
+    @Override
+    public boolean checkHasAcceptedReservations(Long appointmentId) {
+        List<Reservation> reservations = reservationRepository.findAllByAppointmentId(appointmentId);
+        return reservations.size()>0 ? true : false;
     }
 
 }
