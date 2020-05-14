@@ -79,8 +79,8 @@ public class ReservationServiceImpl implements ReservationService {
         if(roles.contains("STUDENT") && !reservation.getStatus().equals(Status.CANCELED))
             throw new Exception("Student can not change reservation status to '"+ reservation.getStatus() + "'!" );
 
-        if(roles.contains("CHECKER") && reservation.getStatus().equals(Status.CANCELED))
-            throw new Exception("TM Checker can not CANCEL reservation!");
+        if(roles.contains("CHECKER") && (reservation.getStatus().equals(Status.CANCELED) || currentUser.getId() != reservation.getAppointment().getProvider().getId()))
+            throw new Exception("Only TM Checker can not CANCEL reservation!");
 
         if(reservation==null) throw new Exception("Reservation not found!");
 
