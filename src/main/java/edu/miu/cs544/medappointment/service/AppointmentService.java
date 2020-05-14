@@ -13,4 +13,5 @@ public interface AppointmentService {
     Appointment createAppointment(AppointmentDto appointment);
     Page<AppointmentDto> getAll(Pageable page, Optional<Status> status);
     AppointmentDto getById(Long id);
+    Appointment updateAppointmentById(Long appointmentIs, AppointmentDto appointment) throws Exception;
 }
