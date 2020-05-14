@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -107,9 +106,6 @@ public class ReservationController {
 		ReservationDto reservationDetail = reservationService.getReservation(id);
 
 		ReservationResponseModel response = mapper.map(reservationDetail, ReservationResponseModel.class);
-		//AppointmentResponseModel appointment = mapper.map(reservationDetail.getAppointmentDto(), AppointmentResponseModel.class);
-		//response.setAppointment(appointment);
-
 		return new ResponseEntity(response, HttpStatus.OK);
 	}
 }

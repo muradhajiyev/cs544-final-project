@@ -87,7 +87,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation updated = reservationRepository.save(reservation);
 
         if (updated.getStatus() == Status.ACCEPTED || updated.getStatus() == Status.DECLINED){
-            String checkerEmail = reservationDto.getAppointment().getProvider().getEmail();
+            String checkerEmail = reservation.getAppointment().getProvider().getEmail();
             String studentEmail = currentUser.getEmail();
             String message = String.format("Reservation Number #%d from the student - %s has been %s", reservation.getId(), studentEmail, updated.getStatus());
             EmailDto checkerEmailDto = new EmailDto(checkerEmail, "Reservation Status Change", message);
