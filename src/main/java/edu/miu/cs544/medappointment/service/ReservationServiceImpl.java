@@ -17,6 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -97,6 +100,33 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+	public List<ReservationDto> viewUserReservations()
+    {
+        User userStudent = userService.getAuthUser();
+		List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
+		List<ReservationDto> ret = new ArrayList<>();
+		for(int i = 0; i < r.size(); i++)
+			if(r.get(i).getConsumer().getId() == userStudent.getId())
+				ret.add(r.get(i));
+		return ret;
+	}
+    
+    @Override
+	public List<ReservationDto> convertToListReservationDto(List<Reservation> resList)
+	{
+		if(null == resList)
+			return null;
+		else
+		{
+			ModelMapper modelMapper = new ModelMapper();
+			return resList.stream()
+					.map(entity -> modelMapper.map(entity, ReservationDto.class))
+					.collect(Collectors.toList());
+		}
+		
+	}
+    
     protected Appointment testAppointmentData(){
         User userChecker = userRepository.getOne(2L);
         //Appointment appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35",userChecker);

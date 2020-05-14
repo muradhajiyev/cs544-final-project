@@ -21,6 +21,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 @RestController
@@ -66,5 +69,31 @@ public class ReservationController {
 		response.setAppointment(appointment);
 
 		return new ResponseEntity(response, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value="Get Reservations for the current user", response= ReservationResponseModel.class)
+	@GetMapping()
+	public ResponseEntity<List<ReservationResponseModel>> getUserReservations()
+	{
+		
+		List<ReservationResponseModel> response = convertToListReservationResponse(
+													reservationService.viewUserReservations());
+		
+		return new ResponseEntity(response, HttpStatus.OK);
+	}
+
+	public List<ReservationResponseModel> convertToListReservationResponse(List<ReservationDto> resList)
+	{
+		if(null == resList)
+			return null;
+		else
+		{
+			ModelMapper mapper = new ModelMapper();
+			mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+			return resList.stream()
+					.map(entity -> mapper.map(entity, ReservationResponseModel.class))
+					.collect(Collectors.toList());
+		}
+		
 	}
 }
