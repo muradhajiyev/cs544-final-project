@@ -72,7 +72,7 @@ public class ReservationController {
 	}
 	
 	@ApiOperation(value="Get Reservations for the current user", response= ReservationResponseModel.class)
-	@GetMapping()
+	@GetMapping
 	public ResponseEntity<List<ReservationResponseModel>> getUserReservations()
 	{
 		
@@ -96,14 +96,11 @@ public class ReservationController {
 		}
 		
 	}
-	@PutMapping(value = "/cancel/{reservationId}")
-	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long reservationId) throws Exception {
-		System.out.println(reservationId);
-		ReservationDto reservation = reservationService.cancelReservation(reservationId);
-		ReservationRequestModel model = new ReservationRequestModel();
+	@PutMapping(value = "/cancel/{id}")
+	private ResponseEntity<ReservationResponseModel> cancelReservationById(@PathVariable Long id) throws Exception {
+		ReservationDto reservation = reservationService.cancelReservation(id);
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
 		ReservationResponseModel updatedResult = mapper.map(reservation, ReservationResponseModel.class);
 		return new ResponseEntity(updatedResult, HttpStatus.OK);
 	}
