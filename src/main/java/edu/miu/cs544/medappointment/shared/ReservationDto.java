@@ -21,6 +21,10 @@ public class ReservationDto implements Serializable {
     public ReservationDto() {
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }

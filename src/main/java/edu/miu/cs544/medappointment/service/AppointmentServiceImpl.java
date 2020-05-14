@@ -90,5 +90,25 @@ public class AppointmentServiceImpl implements AppointmentService {
         ReservationDto reservationDto = modelMapper.map(reservation, ReservationDto.class);
         return reservationDto;
     }
+    @Override
+    public Appointment updateAppointmentById(Long appointmentId, AppointmentDto newAppointment) throws Exception {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        Appointment newApp = modelMapper.map(newAppointment, Appointment.class);
+
+        // Appointment ap = createAppointment(appointment);
+
+        Optional<Appointment> oldAppointment = appointmentRepository.findById(appointmentId);
+
+        if(!oldAppointment.isPresent()){
+            throw new Exception("No appointment found");
+        }
+
+        Appointment appointment = oldAppointment.get();
+        appointment.setDateTime(newApp.getDateTime());
+        appointment.setLocation(newApp.getLocation());
+
+        return appointmentRepository.save(appointment);
+    }
 
 }

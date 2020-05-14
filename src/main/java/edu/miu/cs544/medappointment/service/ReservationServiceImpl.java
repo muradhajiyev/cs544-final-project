@@ -12,9 +12,14 @@ import edu.miu.cs544.medappointment.shared.ReservationDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -25,6 +30,8 @@ public class ReservationServiceImpl implements ReservationService {
     private AppointmentRepository appointmentRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
     public ReservationDto createReservation(ReservationDto reservationDto) throws Exception {
@@ -32,16 +39,14 @@ public class ReservationServiceImpl implements ReservationService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Reservation reservation = modelMapper.map(reservationDto, Reservation.class);
 
-        System.out.println("SERVICE::::::::::::::");
-        System.out.println(reservationDto.getAppointmentDto().getId());
-
         Appointment appointment = appointmentRepository.findById(reservationDto.getAppointmentDto().getId()).orElse(null);
         if(appointment==null) throw new Exception("Appointment not found");
         reservation.setAppointment(appointment);
 
         // TODO:: get authenticated User and pass to appointmentDto
         // this is hardcoded, we should get user from Authentication manager.
-        User userStudent = userRepository.getOne(3L);
+        User userStudent = userService.getAuthUser();
+        if(userStudent==null) throw new Exception("User not found!");
         reservation.setConsumer(userStudent);
 
         Reservation result = reservationRepository.save(reservation);
@@ -95,6 +100,33 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+	public List<ReservationDto> viewUserReservations()
+    {
+        User userStudent = userService.getAuthUser();
+		List<ReservationDto> r = convertToListReservationDto(reservationRepository.findAll());
+		List<ReservationDto> ret = new ArrayList<>();
+		for(int i = 0; i < r.size(); i++)
+			if(r.get(i).getConsumer().getId() == userStudent.getId())
+				ret.add(r.get(i));
+		return ret;
+	}
+    
+    @Override
+	public List<ReservationDto> convertToListReservationDto(List<Reservation> resList)
+	{
+		if(null == resList)
+			return null;
+		else
+		{
+			ModelMapper modelMapper = new ModelMapper();
+			return resList.stream()
+					.map(entity -> modelMapper.map(entity, ReservationDto.class))
+					.collect(Collectors.toList());
+		}
+		
+	}
+    
     protected Appointment testAppointmentData(){
         User userChecker = userRepository.getOne(2L);
         //Appointment appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35",userChecker);

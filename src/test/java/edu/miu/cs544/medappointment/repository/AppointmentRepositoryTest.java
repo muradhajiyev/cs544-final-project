@@ -50,7 +50,7 @@ class AppointmentRepositoryTest {
         users.add(new User("TM Checker3", "TM Checker3", "checker3@gmail.com", "checker3", "12345678"));
         users.add(new User("TM Checker4", "TM Checker4", "checker4@gmail.com", "checker4", "123456789"));
         appointments=new ArrayList<>();
-        appointments.add(new Appointment(LocalDateTime.now(),"McLaughlin", users.get(0)));
+        appointments.add(new Appointment(LocalDateTime.now(),"Verill Hall #35", users.get(0)));
         appointments.add(new Appointment(LocalDateTime.now(),"Veril hall", users.get(1)));
         appointments.add(new Appointment(LocalDateTime.now(),"library", users.get(2)));
         appointments.add(new Appointment(LocalDateTime.now(),"Dalby hall", users.get(3)));
@@ -86,5 +86,22 @@ class AppointmentRepositoryTest {
         Pageable page = PageRequest.of(0,20);
         Page<Appointment> found = appointmentRepository.findDistinctByReservationsStatus(Status.PENDING, page);
         assertEquals(appointments.get(0).getLocation(),found.getContent().get(0).getLocation());
+    }
+
+    @Test
+    public void whenUpdateAppointmentById_ValidId_thenReturnUpdatedAppointment(){
+        //when
+        Optional<Appointment> found = appointmentRepository.findById(appointments.get(0).getId());
+
+        Appointment updated = found.get();
+        updated.setLocation("Veri Hall");
+
+
+        entityManager.persist(updated);
+        entityManager.flush();
+
+        // then
+        assertEquals(updated.getLocation(), appointments.get(0).getLocation());
+
     }
 }

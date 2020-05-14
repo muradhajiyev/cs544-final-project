@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.is;
@@ -101,5 +102,27 @@ class AppointmentControllerTest {
                     .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
+
+    public void updateAppointment_ValidId_ReturnUpdated() throws Exception {
+        //setup
+        User userChecker = new User("TM Checker", "TM Checker", "checker25@gmail.com", "checker3", "123456");
+        userRepository.save(userChecker);
+
+        Appointment appointment = new Appointment(LocalDateTime.now(),"Verill Hall #35", userChecker);
+        Appointment result = appointmentRepository.save(appointment);
+        Long id = result.getId();
+
+        String jsonContent = "{\"dateTime\": \"2020-05-23T10:00:00\", \"location\": \"Updated Location\"}";
+
+        mockMvc.perform(put("/api/v1/appointments/update/{appointmentID}", appointment.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept((MediaType.APPLICATION_JSON))
+                .content(jsonContent))
+                .andExpect(status().isOk());
+        ////System.out.println(mvcResult.getResponse().getContentAsString());
+        // assertEquals("Verill Hall #35", mvcResult.getResponse().getContentAsString());
+
+
+    }
 
 }
