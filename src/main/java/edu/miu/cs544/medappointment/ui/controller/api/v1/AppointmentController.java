@@ -62,19 +62,9 @@ public class AppointmentController {
     {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		AppointmentDto appointment;
-		AppointmentResponseModel response;
-		try 
-		{
-			appointment = appointmentService.getById(id);
-			response = mapper.map(appointment, AppointmentResponseModel.class);
-		}
-		catch(Exception e)
-		{//No appointment with given id
-			response = null;
-			e.printStackTrace();
-		}
-		return new ResponseEntity(response, HttpStatus.CREATED);
+        AppointmentDto appointment = appointmentService.getById(id);
+        AppointmentResponseModel response = mapper.map(appointment, AppointmentResponseModel.class);
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
     @GetMapping
