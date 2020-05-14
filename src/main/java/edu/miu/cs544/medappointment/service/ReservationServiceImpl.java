@@ -133,19 +133,20 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationDto cancelReservation(Long id) throws Exception {
-        System.out.println("Reservation ID:"+id);
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Optional<Reservation> currentReservation = reservationRepository.findById(id);
         if (!currentReservation.isPresent())
             throw new Exception("The Reservation not found");
 
         Reservation reservation = currentReservation.get();
         reservation.setStatus(Status.CANCELED);
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         Reservation updatedReservation = reservationRepository.save(reservation);
         return mapper.map(updatedReservation, ReservationDto.class);
     }
+
     /*@Autowired
 	private ModelMapper modelMapper;
 	@Autowired

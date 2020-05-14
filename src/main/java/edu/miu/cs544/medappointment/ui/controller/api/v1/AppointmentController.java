@@ -122,7 +122,7 @@ public class AppointmentController {
 
     @DeleteMapping("/{appointmentId}")
     public void deleteAppointment(@PathVariable long appointmentId){
-        reservationRepository.deleteAllByAppointment_Id(appointmentId);
+//        reservationRepository.deleteAllByAppointment_Id(appointmentId);
         appointmentService.deleteAppointment(appointmentId);
     }
 }
