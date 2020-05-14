@@ -68,11 +68,14 @@ public class AppointmentController {
     @GetMapping
     @ApiOperation(value="Get All Appoinments", response=AppointmentResponseModel.class, responseContainer = "List")
     public ResponseEntity<Page<AppointmentResponseModel>> getAllAppointments(Pageable page, @ApiParam(name =  "status", type = "String", required = false) @RequestParam Optional<Status> status){
-        Page<AppointmentResponseModel> result=new PageImpl<AppointmentResponseModel>(appointmentService.getAll(page,status)
-                .getContent().stream()
-                .map(appointment -> convertToAppointmentResponseModel(appointment))
-                .collect(Collectors.toList())
-        );
+        Page<AppointmentResponseModel> result = appointmentService.getAll(page,status).map(appointment -> convertToAppointmentResponseModel(appointment));
+        return new ResponseEntity(result,HttpStatus.OK);
+    }
+
+    @GetMapping("/available")
+    @ApiOperation(value="Get All Available Appointments", response=AppointmentResponseModel.class, responseContainer = "List")
+    public ResponseEntity<Page<AppointmentResponseModel>> getAllAvailableAppointments(Pageable page){
+        Page<AppointmentResponseModel> result = appointmentService.getAllAvailable(page).map(appointment -> convertToAppointmentResponseModel(appointment));
         return new ResponseEntity(result,HttpStatus.OK);
     }
 

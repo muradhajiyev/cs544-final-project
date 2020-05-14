@@ -20,6 +20,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Page<Appointment> findDistinctByReservationsStatus(Status status, Pageable page);
 
     @Query("SELECT DISTINCT a FROM Appointment a LEFT OUTER JOIN a.reservations r WHERE r.status != 'ACCEPTED' OR r.id=null")
-    Page<Appointment> findAll(Pageable page);
+    Page<Appointment> findAllAvailable(Pageable page);
 
 }

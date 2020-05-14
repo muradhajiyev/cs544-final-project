@@ -102,6 +102,15 @@ class AppointmentControllerTest {
                     .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
+    @Test
+    @WithMockUser(username = "admin", password = "123456")
+    public void getAllAvailableAppointment_Pagable_ThenReturnPageAvailableAppointment() throws Exception{
+        mockMvc.perform(get("/api/v1/appointments/available"))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
 
     public void updateAppointment_ValidId_ReturnUpdated() throws Exception {
         //setup
