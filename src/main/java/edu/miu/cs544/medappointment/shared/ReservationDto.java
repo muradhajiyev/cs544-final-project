@@ -4,10 +4,11 @@ import edu.miu.cs544.medappointment.entity.Appointment;
 import edu.miu.cs544.medappointment.entity.Status;
 import edu.miu.cs544.medappointment.entity.User;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ReservationDto {
-    private Long id;
+public class ReservationDto implements Serializable {
+    private long id;
     private Date createdAt;
     private Date updatedAt;
     private Status status;
