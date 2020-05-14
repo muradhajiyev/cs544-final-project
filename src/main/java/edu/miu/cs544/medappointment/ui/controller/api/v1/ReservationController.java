@@ -46,13 +46,13 @@ public class ReservationController {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		ReservationDto reservationDto = mapper.map(model, ReservationDto.class);
-		reservationDto.setAppointmentDto(appointmentService.getById(model.getAppointmentId()));
+		reservationDto.setAppointment(appointmentService.getById(model.getAppointmentId()));
 		ReservationDto reservation = reservationService.createReservation(reservationDto);
 
 		ReservationResponseModel response = mapper.map(reservation, ReservationResponseModel.class);
-		AppointmentResponseModel appointment = mapper.map(reservationDto.getAppointmentDto(), AppointmentResponseModel.class);
+		AppointmentResponseModel appointment = mapper.map(reservationDto.getAppointment(), AppointmentResponseModel.class);
 		response.setAppointment(appointment);
-		UserResponseModel consumer = mapper.map(reservation.getConsumerDto(), UserResponseModel.class);
+		UserResponseModel consumer = mapper.map(reservation.getConsumer(), UserResponseModel.class);
 		response.setConsumer(consumer);
 
 		return new ResponseEntity(response, HttpStatus.CREATED);

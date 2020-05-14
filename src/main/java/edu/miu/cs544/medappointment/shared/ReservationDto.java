@@ -41,19 +41,19 @@ public class ReservationDto {
         this.status = status;
     }
 
-    public UserDto getConsumerDto() {
+    public UserDto getConsumer() {
         return consumer;
     }
 
-    public void setConsumerDto(UserDto consumer) {
+    public void setConsumer(UserDto consumer) {
         this.consumer = consumer;
     }
 
-    public AppointmentDto getAppointmentDto() {
+    public AppointmentDto getAppointment() {
         return appointment;
     }
 
-    public void setAppointmentDto(AppointmentDto appointment) {
+    public void setAppointment(AppointmentDto appointment) {
         this.appointment = appointment;
     }
 
