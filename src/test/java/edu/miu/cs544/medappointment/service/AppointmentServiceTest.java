@@ -78,7 +78,7 @@ class AppointmentServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
-        when(appointmentRepository.findAll()).thenReturn(appointments);
+        when(appointmentRepository.findAllAvailable(any(Pageable.class))).thenReturn(appointmentsPage);
         when(appointmentRepository.findAll(any(Pageable.class))).thenReturn(appointmentsPage);
         when(appointmentRepository.count()).thenReturn(1L);
         when(appointmentRepository.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(appointment));
@@ -90,6 +90,16 @@ class AppointmentServiceTest {
 
         Pageable page=PageRequest.of(0,20);
         Page<AppointmentDto> appointmentListResult=appointmentService.getAll(page, Optional.empty());
+        assertEquals(appointmentsPage.getContent().get(0).getLocation(), appointmentListResult.getContent().get(0).getLocation());
+        assertEquals(appointmentsPage.getContent().get(0).getDateTime(), appointmentListResult.getContent().get(0).getDateTime());
+        assertEquals(appointmentsPage.getContent().get(0).getProvider(), appointmentListResult.getContent().get(0).getProvider());
+    }
+
+    @Test
+    void getAllAvailableAppointment_Pagable_ThenReturnPageAvailableAppointment() {
+
+        Pageable page=PageRequest.of(0,20);
+        Page<AppointmentDto> appointmentListResult=appointmentService.getAllAvailable(page);
         assertEquals(appointmentsPage.getContent().get(0).getLocation(), appointmentListResult.getContent().get(0).getLocation());
         assertEquals(appointmentsPage.getContent().get(0).getDateTime(), appointmentListResult.getContent().get(0).getDateTime());
         assertEquals(appointmentsPage.getContent().get(0).getProvider(), appointmentListResult.getContent().get(0).getProvider());
