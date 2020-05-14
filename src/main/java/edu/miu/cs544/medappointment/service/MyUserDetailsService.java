@@ -2,6 +2,7 @@ package edu.miu.cs544.medappointment.service;
 
 import edu.miu.cs544.medappointment.entity.Role;
 import edu.miu.cs544.medappointment.repository.UserRepository;
+import edu.miu.cs544.medappointment.shared.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,7 +30,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
         edu.miu.cs544.medappointment.entity.User user = userRepository.findByEmailOrUsername(username, username);
         List<GrantedAuthority> authorities = buildUserAuthority(user.getRoles());
-        return new User(username, user.getPassword(), authorities);
+        return new MyUserDetails(username, user.getPassword(), authorities);
     }
 
 
