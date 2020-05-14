@@ -3,10 +3,11 @@ package edu.miu.cs544.medappointment.shared;
 import edu.miu.cs544.medappointment.entity.Reservation;
 import edu.miu.cs544.medappointment.entity.User;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class AppointmentDto {
+public class AppointmentDto implements Serializable {
     private long id;
     private LocalDateTime dateTime;
     private String location;

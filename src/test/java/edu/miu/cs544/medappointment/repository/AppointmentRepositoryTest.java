@@ -55,19 +55,20 @@ class AppointmentRepositoryTest {
         appointments.add(new Appointment(LocalDateTime.now(),"library", users.get(2)));
         appointments.add(new Appointment(LocalDateTime.now(),"Dalby hall", users.get(3)));
         reservation=new Reservation(Status.PENDING,users.get(0),appointments.get(0));
-        for(User user:users){
+
+        for(User user:users)
             entityManager.persist(user);
-        }
-        for(Appointment appointment:appointments){
+
+        for(Appointment appointment:appointments)
             entityManager.persist(appointment);
-        }
+
         entityManager.persist(reservation);
         entityManager.flush();
     }
 
 
     @Test
-    public void whenFindAllById_ValidId_thenReturnAppointment() throws Exception{
+    public void FindAllById_ValidId_thenReturnAppointment() throws Exception{
         // when
         Optional<Appointment> found = appointmentRepository.findById(appointments.get(0).getId());
 

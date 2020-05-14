@@ -47,7 +47,7 @@ public class AppointmentController {
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         AppointmentDto appointmentDto = mapper.map(model, AppointmentDto.class);
 
-        Appointment appointment = appointmentService.createAppointment(appointmentDto);
+        AppointmentDto appointment = appointmentService.createAppointment(appointmentDto);
         AppointmentResponseModel response = mapper.map(appointment, AppointmentResponseModel.class);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
@@ -85,6 +85,13 @@ public class AppointmentController {
         return new ResponseEntity(result,HttpStatus.OK);
     }
 
+
+    @GetMapping("/{id}/reservations")
+    public ResponseEntity<Page> getAppointmentReservations(Pageable page, @PathVariable("id") Long appointmentId){
+        return ResponseEntity.ok(appointmentService.getAppointmentReservations(appointmentId, page));
+    }
+
+
     @PutMapping("/update/{appointmentId}")
     @ApiOperation(value="Update an appointment by id", response=AppointmentResponseModel.class)
     public ResponseEntity<AppointmentResponseModel> updateAppointment(@PathVariable Long appointmentId, @Valid @RequestBody AppointmentRequestModel model) throws Exception {
@@ -98,6 +105,7 @@ public class AppointmentController {
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
+
 
     private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
         if(appointment == null)
