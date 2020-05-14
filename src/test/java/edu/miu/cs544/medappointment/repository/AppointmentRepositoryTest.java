@@ -50,7 +50,7 @@ class AppointmentRepositoryTest {
         users.add(new User("TM Checker3", "TM Checker3", "checker3@gmail.com", "checker3", "12345678"));
         users.add(new User("TM Checker4", "TM Checker4", "checker4@gmail.com", "checker4", "123456789"));
         appointments=new ArrayList<>();
-        appointments.add(new Appointment(LocalDateTime.now(),"McLaughlin", users.get(0)));
+        appointments.add(new Appointment(LocalDateTime.now(),"Verill Hall #35", users.get(0)));
         appointments.add(new Appointment(LocalDateTime.now(),"Veril hall", users.get(1)));
         appointments.add(new Appointment(LocalDateTime.now(),"library", users.get(2)));
         appointments.add(new Appointment(LocalDateTime.now(),"Dalby hall", users.get(3)));
