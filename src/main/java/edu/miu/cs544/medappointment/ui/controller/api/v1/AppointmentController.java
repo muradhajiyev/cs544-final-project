@@ -100,6 +100,13 @@ public class AppointmentController {
     }
 
 
+    @DeleteMapping("/{id}")
+    @ApiOperation(value="Delete an appointment by id")
+    public ResponseEntity deleteAppointment(@PathVariable long id){
+        appointmentService.deleteAppointment(id);
+        return ResponseEntity.ok().build();
+    }
+
     private AppointmentResponseModel convertToAppointmentResponseModel(AppointmentDto appointment) {
         if(appointment == null)
             return null;
@@ -110,9 +117,4 @@ public class AppointmentController {
         return appointmentResponseModel;
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteAppointment(@PathVariable long id){
-        appointmentService.deleteAppointment(id);
-        return ResponseEntity.ok().build();
-    }
 }

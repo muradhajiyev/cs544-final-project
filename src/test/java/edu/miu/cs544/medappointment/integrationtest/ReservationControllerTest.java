@@ -64,10 +64,6 @@ public class ReservationControllerTest {
     @WithMockUser(username = "admin", password = "123456", authorities = {"ADMIN", "CHECKER"})
     public void createReservation_ValidInput_ThenReturnReservationResponseModel() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        /*mapper.registerModule(new ParameterNamesModule())
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule())
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);*/
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.registerModule(new JavaTimeModule());
         Appointment appointment = testAppointmentData();
@@ -81,7 +77,6 @@ public class ReservationControllerTest {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         User consumer = modelMapper.map(consumerRM, User.class);
-        //requestModel.setConsumerId(userConsumer.getId());
 
         String jsonContent = mapper.writeValueAsString(requestModel);
         //String jsonContent = "{\"status\":\"PENDING\", \"appointment\":{\"id\":1, \"dateTime\": \"2020-05-23T10:00:00\", \"location\": \"Verill Hall #35\"}}";
